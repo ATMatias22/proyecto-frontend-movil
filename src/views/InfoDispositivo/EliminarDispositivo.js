@@ -1,5 +1,6 @@
 import * as React from 'react';
-import { View, Text, Button, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
+import Boton from '../../Componentes/Boton/Index';
 
 export default function EliminarDispositivo({ navigation }) {
   return (
@@ -13,17 +14,17 @@ export default function EliminarDispositivo({ navigation }) {
 
       <View style={Styles.botones}>
         <View>
-        <Button
-          title='Aceptar'
-          onPress={() => navigation.navigate('MostrarSensores')}
-        />
+        <Boton text="aceptar" 
+            onClick={() => navigation.navigate('MostrarSensores')} 
+            type= "aceptar"
+            />
         </View>
      
         <View>
-          <Button
-            title='Cancelar'
-            onPress={() => navigation.navigate('InfoDispositivo')}
-          />
+        <Boton text="cancelar" 
+            onClick={() => navigation.navigate('InfoDispositivo')} 
+            type= "cancelar"
+            />
         </View>
       </View>
 

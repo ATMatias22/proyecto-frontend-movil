@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, Text, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
 
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash'
 
@@ -17,6 +18,9 @@ export default function VerHistorial({ navigation }) {
           <Text>Vaciar Historial</Text>
           <FontAwesomeIcon icon={faTrash} style={Styles.icono} />
         </TouchableOpacity>
+        {/* <Boton text="Vaciar Historial"
+          onClick={() => navigation.navigate('VerHistorial')}
+type="secundario" />*/}
       </View>
 
 
@@ -25,7 +29,7 @@ export default function VerHistorial({ navigation }) {
         <View style={Styles.historial2Container}>
           <View style={{ marginLeft: 5, marginRight: 5 }}>
 
-            <Text style={{ textAlign: "center", marginTop:5}}>Se ABRIÓ la puerta</Text>
+            <Text style={{ textAlign: "center", marginTop: 5 }}>Se ABRIÓ la puerta</Text>
 
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontSize: 10, padding: 5 }}>fecha</Text>
@@ -37,7 +41,7 @@ export default function VerHistorial({ navigation }) {
         <View style={Styles.historial2Container}>
           <View style={{ marginLeft: 5, marginRight: 5 }}>
 
-            <Text style={{ textAlign: "center", marginTop:5}}>Se CERRÓ la puerta</Text>
+            <Text style={{ textAlign: "center", marginTop: 5 }}>Se CERRÓ la puerta</Text>
 
             <View style={{ flexDirection: "row" }}>
               <Text style={{ fontSize: 10, padding: 5 }}>fecha</Text>
@@ -61,8 +65,8 @@ const Styles = StyleSheet.create({
   historialContainer: {
     marginTop: 10,
     marginBottom: 10,
-    marginHorizontal:20,
-    padding:5,
+    marginHorizontal: 20,
+    padding: 5,
     backgroundColor: "#f1f1f1",
     borderColor: "#f1f1f1"
   },
@@ -71,7 +75,7 @@ const Styles = StyleSheet.create({
     marginBottom: 10,
     borderWidth: 1,
     borderRadius: 10,
-    marginHorizontal:30,
+    marginHorizontal: 30,
     backgroundColor: "#fff",
     borderColor: "#fff"
   },

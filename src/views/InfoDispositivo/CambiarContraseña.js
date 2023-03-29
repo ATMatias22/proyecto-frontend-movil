@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
 
 import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
@@ -60,10 +61,9 @@ export default function CambiarContraseña({ navigation }) {
 
 
                 <View style={Styles.botonCambiarCont}>
-                    <Button
-                        title="Cambiar contraseña"
-                        onPress={() => navigation.navigate('InfoDispositivo')}
-                    />
+                    <Boton text="Cambiar contraseña" 
+                    onClick={() => navigation.navigate('InfoDispositivo')} 
+                    type="principal"/>
                 </View>
 
             </View>

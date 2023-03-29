@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
+import Input from '../../Componentes/Input/Index';
 
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
 import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
@@ -31,13 +33,12 @@ export default function Register({ navigation }) {
 
       <View style={Styles.registerContainer}>
 
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faUser} style={Styles.icono} />
-          <TextInput
-            placeholder='Ingrese su mail'
-            autoCapitalize='none'
-          />
-        </View>
+        <Input
+          placeholder="Ingrese su mail"
+          icono={
+            <FontAwesomeIcon icon={faUser} />
+          }
+        />
 
 
         <View style={Styles.input}>
@@ -78,10 +79,9 @@ export default function Register({ navigation }) {
 
         <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
           <View>
-            <Button
-              title="Registrarse"
-              onPress={() => navigation.navigate('MostrarSensores')}
-            />
+            <Boton text="Registrarse"
+              onClick={() => navigation.navigate('MostrarSensores')}
+              type="principal" />
           </View>
 
           <View style={{ marginTop: 30, alignItems: "center", flexDirection: "row" }}>
@@ -89,7 +89,7 @@ export default function Register({ navigation }) {
             <TouchableOpacity
               onPress={() => navigation.navigate('Login')}
             >
-              <Text style={{ fontWeight: "bold", fontSize: 10, paddingLeft: 20, color: "orange" }}>Ingresar</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 10, paddingLeft: 20, color: "orangered" }}>Ingresar</Text>
             </TouchableOpacity>
           </View>
 
@@ -143,6 +143,16 @@ const Styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 10,
     paddingLeft: 10
+  },
+  botonRegistrar: {
+    fontWeight: "bold",
+    fontSize: 16,
+    textTransform: "uppercase",
+    padding: 10,
+    textAlign: "center",
+    color: "white",
+    backgroundColor: "orange",
+    borderRadius: 30
   }
 
 })

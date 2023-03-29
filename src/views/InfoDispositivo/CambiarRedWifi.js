@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
+import Input from '../../Componentes/Input/Index';
 
 import { faWifi } from '@fortawesome/free-solid-svg-icons/faWifi'
 import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
@@ -25,18 +27,17 @@ export default function CambiarRedWifi({ navigation }) {
         <View style={Styles.container} >
 
             <View style={Styles.formContainer}>
+
+                <Input
+                    placeholder="Ingresar nombre"
+                    icono={
+                        <FontAwesomeIcon icon={faWifi} />
+                    }
+                />
+
                 <View style={Styles.input}>
 
-                    <FontAwesomeIcon icon={faWifi} style={Styles.icono}/>
-                    <TextInput
-                        placeholder='Ingresar nombre'
-                        autoCapitalize='none'
-                    />
-                </View>
-
-                <View style={Styles.input}>
-
-                    <FontAwesomeIcon icon={faLock} style={Styles.icono}/>
+                    <FontAwesomeIcon icon={faLock} style={Styles.icono} />
                     <TextInput
                         placeholder='Ingresar contraseña'
                         secureTextEntry={true}
@@ -56,10 +57,9 @@ export default function CambiarRedWifi({ navigation }) {
 
                 <View style={Styles.botonCambiarRed}>
                     <View>
-                        <Button
-                            title="Cambiar red"
-                            onPress={() => navigation.navigate('InfoDispositivo')}
-                        />
+                        <Boton text="Cambiar red"
+                            onClick={() => navigation.navigate('InfoDispositivo')}
+                            type="principal" />
                     </View>
                 </View>
             </View>

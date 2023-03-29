@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
 
 import { faPlus } from '@fortawesome/free-solid-svg-icons/faPlus'
 
@@ -29,11 +30,10 @@ export default function MostrarSensores({ navigation }) {
 
                 </View>
 
-                <View style={{ marginRight: 190, marginLeft: 10 }}>
-                    <Button
-                        title="Ir al dispositivo"
-                        onPress={() => navigation.navigate('InfoDispositivo')}
-                    />
+                <View style={{ marginRight: 190, marginLeft: 10, marginTop: 10 }}>
+                    <Boton text="Ir al dispositivo"
+                        onClick={() => navigation.navigate('InfoDispositivo')}
+                        type="secundario" />
                 </View>
 
                 <View style={{ marginLeft: 190, flexDirection: "row", padding: 10 }}>
@@ -64,6 +64,14 @@ const Styles = StyleSheet.create({
         marginTop: 20,
         flexDirection: "row"
     },
+    /* botonIrDispositivo: {
+         textTransform: "uppercase",
+         textAlign: "center",
+         backgroundColor: "orangered",
+         color: "white",
+         padding: 7,
+         borderRadius: 30,
+     },*/
     dispositivo: {
         marginTop: 20,
         borderWidth: 1,

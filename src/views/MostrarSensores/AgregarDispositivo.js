@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
 
 import { faCode } from '@fortawesome/free-solid-svg-icons/faCode'
 import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
@@ -10,7 +11,7 @@ import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 export default function AgregarDispositivo({ navigation }) {
 
     const [data, setData] = React.useState({
-        codigo:"",
+        codigo: "",
         password: "",
         secureTextEntry: true
     });
@@ -40,7 +41,7 @@ export default function AgregarDispositivo({ navigation }) {
                         placeholder='Ingresar contraseña'
                         secureTextEntry={data.secureTextEntry ? true : false}
                     />
-                      <TouchableOpacity
+                    <TouchableOpacity
                         onPress={updateSecureTextEntry}>
                         {data.secureTextEntry ?
                             <FontAwesomeIcon icon={faEyeSlash} style={Styles.iconoOjo} />
@@ -52,10 +53,9 @@ export default function AgregarDispositivo({ navigation }) {
 
                 <View style={Styles.botonAgregarDisp}>
                     <View>
-                        <Button
-                            title="Agregar"
-                            onPress={() => navigation.navigate('MostrarSensores')}
-                        />
+                        <Boton text="Agregar dispositivo" 
+                        onClick={() => navigation.navigate('MostrarSensores')} 
+                        type="principal"/>
                     </View>
                 </View>
 

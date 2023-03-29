@@ -1,6 +1,9 @@
 import * as React from 'react';
 import { View, Text, Button, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
+import Input from '../../Componentes/Input/Index';
+
 
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
 import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
@@ -32,18 +35,26 @@ export default function Login({ navigation }) {
 
       <View style={Styles.loginContainer}>
 
-        <View style={Styles.input}>
+        {/*  <View style={Styles.input}>
           <FontAwesomeIcon icon={faUser} style={Styles.icono} />
           <TextInput
             placeholder='Ingrese su mail'
             autoCapitalize='none'
           />
         </View>
+  */}
+        <Input
+          placeholder="Ingrese su mail"
+          icono={
+            <FontAwesomeIcon icon={faUser} />
+          }
+        />
 
         <View style={Styles.input}>
           <FontAwesomeIcon icon={faLock} style={Styles.icono} />
           <TextInput
             placeholder='Ingrese su contraseña'
+            autoCapitalize='none'
             secureTextEntry={data.secureTextEntry ? true : false}
           />
 
@@ -62,18 +73,19 @@ export default function Login({ navigation }) {
 
         <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
           <View>
-            <Button
-              title="Ingresar"
-              onPress={() => navigation.navigate('MostrarSensores')}
+            <Boton text="ingresar"
+              onClick={() => navigation.navigate('MostrarSensores')}
+              type="principal"
             />
           </View>
 
           <View style={{ marginTop: 30, alignItems: "center", flexDirection: "row" }}>
             <Text style={Styles.texto}>¿No se ha registrado?</Text>
+
             <TouchableOpacity
               onPress={() => navigation.navigate('Register')}
             >
-              <Text style={{ fontWeight: "bold", fontSize: 10, paddingLeft: 20, color: "orange" }}>Registrarse</Text>
+              <Text style={{ fontWeight: "bold", fontSize: 10, paddingLeft: 20, color: "orangered" }}>Registrarse</Text>
             </TouchableOpacity>
 
           </View>
@@ -124,12 +136,11 @@ const Styles = StyleSheet.create({
   iconoOjo: {
     marginRight: 5,
     marginTop: 5,
-    marginLeft: 60
+    marginLeft: 55
   },
   texto: {
     fontWeight: "bold",
     fontSize: 10,
     paddingLeft: 10
   }
-
 })

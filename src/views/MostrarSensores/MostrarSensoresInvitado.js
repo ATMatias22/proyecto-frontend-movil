@@ -1,6 +1,7 @@
 import * as React from 'react';
-import { View, Text, Button, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TouchableOpacity, StyleSheet } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
 
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash'
 
@@ -26,11 +27,10 @@ export default function MostrarSensoresInvitado({ navigation }) {
                     <Text style={Styles.texto}>Cantidad de personas vinculadas: X</Text>
                 </View>
 
-                <View style={{ marginRight: 190, marginLeft: 10 }}>
-                    <Button
-                        title="Ver historial"
-                        onPress={() => navigation.navigate('VerHistorial')}
-                    />
+                <View style={{ marginRight: 190, marginLeft: 10, marginTop: 10 }}>
+                    <Boton text="Ver historial"
+                        onClick={() => navigation.navigate('VerHistorial')}
+                        type="secundario" />
                 </View>
 
                 <View style={{ marginLeft: 170, flexDirection: "row", padding: 8 }}>
@@ -72,14 +72,22 @@ const Styles = StyleSheet.create({
     texto2: {
         fontSize: 8,
         paddingLeft: 10,
-        paddingTop:3
+        paddingTop: 3
     },
-    agregarDispositivo: {
-        marginLeft: 20,
-        marginTop: 10,
-        backgroundColor: "#fff",
-        padding: 8,
-        marginRight: 308,
-        borderRadius: 30
-    }
+    /* agregarDispositivo: {
+         marginLeft: 20,
+         marginTop: 10,
+         backgroundColor: "#fff",
+         padding: 8,
+         marginRight: 308,
+         borderRadius: 30
+     },*/
+    botonIrVerHistorial: {
+        textTransform: "uppercase",
+        textAlign: "center",
+        backgroundColor: "orangered",
+        color: "white",
+        padding: 7,
+        borderRadius: 30,
+    },
 })

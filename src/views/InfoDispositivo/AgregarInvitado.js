@@ -1,6 +1,8 @@
 import * as React from 'react';
-import { View, Text, Button, TextInput, StyleSheet } from 'react-native';
+import { View, TextInput, StyleSheet } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
+import Boton from '../../Componentes/Boton/Index';
+import Input from '../../Componentes/Input/Index';
 
 import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope'
 
@@ -9,21 +11,18 @@ export default function CambiarContraseña({ navigation }) {
         <View style={Styles.container} >
 
             <View style={Styles.formContainer}>
-                <View style={Styles.input}>
-
-                    <FontAwesomeIcon icon={faEnvelope} style={Styles.icono} />
-                    <TextInput
-                        placeholder='ejemplo@algo.com'
-                        secureTextEntry={true}
-                    />
-                </View>
+                <Input
+                    placeholder="ejemplo@gmail.com"
+                    icono={
+                        <FontAwesomeIcon icon={faEnvelope} />
+                    }
+                />
 
                 <View style={Styles.botonAgregarInv}>
                     <View>
-                        <Button
-                            title="Agregar"
-                            onPress={() => navigation.navigate('VerInvitados')}
-                        />
+                        <Boton text="Agregar invitado"
+                            onClick={() => navigation.navigate('VerInvitados')}
+                            type="principal" />
                     </View>
                 </View>
 
