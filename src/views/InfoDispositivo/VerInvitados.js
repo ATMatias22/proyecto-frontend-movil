@@ -5,14 +5,19 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash'
 import { faUserPlus } from '@fortawesome/free-solid-svg-icons/faUserPlus'
 
+import { Text as TextoDripsy } from 'dripsy';
+
 export default function VerInvitados({ navigation }) {
   return (
     <View style={Styles.container}>
 
       <View style={{ alignItems: "center", marginTop: 20 }}>
 
-        <Text style={{ fontSize: 20 }}>Nombre del dispositivo</Text>
+        {/*<Text style={{ fontSize: 20 }}>Nombre del dispositivo</Text>*/}
 
+        <TextoDripsy sx={{
+          fontSize: [20, 25, 30],
+        }}>Nombre del dispositivo</TextoDripsy>
 
       </View>
 
@@ -22,9 +27,24 @@ export default function VerInvitados({ navigation }) {
 
         <View style={Styles.datosInvitadoContainer}>
 
-          <Text style={Styles.texto}>Nombre de invitado</Text>
+          {/*<Text style={Styles.texto}>Nombre de invitado</Text>*/}
+
+          <TextoDripsy sx={{
+            fontSize: [12, 14, 16],
+            marginLeft: 1,
+            paddingTop: 1
+          }}>Nombre de invitado</TextoDripsy>
+
           <View style={{ flexDirection: "row" }}>
-            <Text style={Styles.texto2}>fecha de agregacion</Text>
+            {/*<Text style={Styles.texto2}>Fecha de agregacion</Text>*/}
+
+            <TextoDripsy sx={{
+              fontSize: [10, 12, 14],
+              marginLeft: 1,
+              padding: 1,
+              paddingLeft: 1
+            }}>Fecha de agregacion</TextoDripsy>
+
             <TouchableOpacity style={Styles.icono}>
               <FontAwesomeIcon icon={faTrash} />
             </TouchableOpacity>
@@ -34,7 +54,7 @@ export default function VerInvitados({ navigation }) {
 
         <View style={Styles.agregarInvitado}>
           <TouchableOpacity onPress={() => navigation.navigate('AgregarInvitado')}>
-          <FontAwesomeIcon icon={faUserPlus} />
+            <FontAwesomeIcon icon={faUserPlus} />
           </TouchableOpacity>
         </View>
       </View>
@@ -89,7 +109,7 @@ const Styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "#fff",
     padding: 8,
-    marginRight: 215,
+    marginRight: "auto",
     borderRadius: 30
   }
 })

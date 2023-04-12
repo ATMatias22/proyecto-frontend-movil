@@ -12,21 +12,21 @@ import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 
 
-const Input = ({ placeholder, icono, type = "normal" }) => {
+const Input = ({ placeholder, icono, value, errorMessage, defaultValue, type = "normal" }) => {
 
 
-    const [data, setData] = React.useState({
+    /*const [data, setData] = React.useState({
         email: "",
         password: "",
         secureTextEntry: false
-    });
+    });*/
 
-    const updateSecureTextEntry = () => {
+   /* const updateSecureTextEntry = () => {
         setData({
             ...data,
             secureTextEntry: !data.secureTextEntry
         });
-    }
+    }*/
     return (
 
         <View style={
@@ -39,6 +39,9 @@ const Input = ({ placeholder, icono, type = "normal" }) => {
             <TextInput
                 placeholder={placeholder}
                 autoCapitalize='none'
+               // value={value}
+                errorMessage={errorMessage}
+                defaultValue={defaultValue}
                 //secureTextEntry={data.secureTextEntry ? true : false}
             />
             {/*type = "contraseña" ?

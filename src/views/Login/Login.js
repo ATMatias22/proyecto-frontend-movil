@@ -4,19 +4,25 @@ import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Boton from '../../Componentes/Boton/Index';
 import Input from '../../Componentes/Input/Index';
 
+import { Text as TextoDripsy } from 'dripsy';
+
 
 import { faUser } from '@fortawesome/free-solid-svg-icons/faUser'
 import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 
+import { validateEmail } from '../../Helpers/Helpers';
+
 export default function Login({ navigation }) {
+
 
   const [data, setData] = React.useState({
     email: "",
     password: "",
     secureTextEntry: true
   });
+
 
   const updateSecureTextEntry = () => {
     setData({
@@ -25,30 +31,98 @@ export default function Login({ navigation }) {
     });
   }
 
+
+  const [formData, setFormData] = React.useState(defaultFormValues())
+  const [errorEmail, setErrorEmail] = React.useState("")
+  const [errorPassword, setErrorPassword] = React.useState("")
+  //const [loading, setLoading] = useState(false)
+
+  const onChange = (e, type) => {
+    setFormData({ ...formData, [type]: e.nativeEvent.text })
+  }
+
+  const loginUser = () => {
+    if (!validateData()) {
+      return;
+    }
+    navigation.navigate('MostrarSensores')
+  }
+
+
+  const validateData = () => {
+    setErrorEmail("")
+    setErrorPassword("")
+    let isValid = true
+
+    if (!validateEmail(formData.email)) {
+      setErrorEmail("Debes ingresar un email valido.")
+      isValid = false
+    }
+    if (formData.email == "") {
+      setErrorEmail("Debe ingresar un email.")
+      isValid = false
+    }
+    if (formData.email !== "ignacio@hola.com" & validateEmail(formData.email)) {
+      setErrorEmail("Email incorrecto.")
+      isValid = false
+    }
+    if (formData.password == "") {
+      setErrorPassword("Debe ingresar una contraseña.")
+      isValid = false
+    }
+    if (formData.password !== "123456" & formData.password !== "") {
+      setErrorPassword("Contraseña incorrecta.")
+      isValid = false
+    }
+
+    return isValid
+  }
+
   return (
     <View style={Styles.container}>
 
 
       <View style={Styles.logo}>
-        <Text>el logo</Text>
+        <TextoDripsy sx={{
+          fontSize: [0, 1, 2],
+        }}>el logo</TextoDripsy>
       </View>
 
       <View style={Styles.loginContainer}>
 
-        {/*  <View style={Styles.input}>
+
+        {//-----------------------------------------
+          //  por alguna razon hecho con el componente no funciona la validacion pero normal si
+          /*  <Input
+              placeholder="Ingrese su mail"
+              icono={
+                <FontAwesomeIcon icon={faUser} />
+              }
+              errorMessage={errorEmail}
+              onChange={(e) => onChange(e, "email")}
+              defaultValue={formData.email}
+    
+            />
+            */
+          //----------------------------------------------
+        }
+
+        <View style={Styles.input}>
           <FontAwesomeIcon icon={faUser} style={Styles.icono} />
           <TextInput
             placeholder='Ingrese su mail'
             autoCapitalize='none'
+            errorMessage={errorEmail}
+            onChange={(e) => onChange(e, "email")}
+            defaultValue={formData.email}
           />
         </View>
-  */}
-        <Input
-          placeholder="Ingrese su mail"
-          icono={
-            <FontAwesomeIcon icon={faUser} />
-          }
-        />
+        {errorEmail !== null ?
+          <Text style={Styles.mensajeError}>{errorEmail}</Text>
+          :
+          null
+        }
+
 
         <View style={Styles.input}>
           <FontAwesomeIcon icon={faLock} style={Styles.icono} />
@@ -56,7 +130,13 @@ export default function Login({ navigation }) {
             placeholder='Ingrese su contraseña'
             autoCapitalize='none'
             secureTextEntry={data.secureTextEntry ? true : false}
+
+            errorMessage={errorPassword}
+            onChange={(e) => onChange(e, "password")}
+            defaultValue={formData.password}
+          // value={form.contraseña}
           />
+
 
           <TouchableOpacity
             onPress={updateSecureTextEntry}
@@ -68,12 +148,16 @@ export default function Login({ navigation }) {
             }
           </TouchableOpacity>
         </View>
-
-
+        {errorPassword !== null ?
+          <Text style={Styles.mensajeError}>{errorPassword}</Text>
+          :
+          null
+        }
 
         <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
           <View>
             <Boton text="ingresar"
+              //onClick={() => loginUser()}
               onClick={() => navigation.navigate('MostrarSensores')}
               type="principal"
             />
@@ -98,6 +182,9 @@ export default function Login({ navigation }) {
   );
 }
 
+const defaultFormValues = () => {
+  return { email: "", password: "" }
+}
 
 const Styles = StyleSheet.create({
   container: {
@@ -142,5 +229,9 @@ const Styles = StyleSheet.create({
     fontWeight: "bold",
     fontSize: 10,
     paddingLeft: 10
+  },
+  mensajeError: {
+    marginLeft: 40,
+    color: "red"
   }
 })

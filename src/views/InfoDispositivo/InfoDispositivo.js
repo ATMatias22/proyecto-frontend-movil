@@ -5,61 +5,74 @@ import Boton from '../../Componentes/Boton/Index';
 
 import { faPencil } from '@fortawesome/free-solid-svg-icons/faPencil'
 
+import { Text as TextoDripsy } from 'dripsy';
+
 export default function InfoDispositivo({ navigation }) {
   return (
     <View style={Styles.container}>
 
       <View style={Styles.nombreDispositivo}>
-        <Text style={Styles.texto}>Nombre del dispositivo</Text>
+        {/*<Text style={Styles.texto}>Nombre del dispositivo</Text>*/}
+
+        <TextoDripsy sx={{
+          fontSize: [20, 22, 24],
+          fontWeight: "bold"
+        }}>Nombre del dispositivo</TextoDripsy>
+
         <TouchableOpacity style={{ paddingLeft: 5 }}>
           <FontAwesomeIcon icon={faPencil} />
         </TouchableOpacity>
       </View>
 
       <View style={Styles.botonesEncendidoApagado}>
-        <View style={{marginLeft: 10, marginRight: -10}}>
-      <Boton text="Encender" 
-            onClick={() => navigation.navigate('InfoDispositivo')} 
-            type= "aceptar"
-            />
-            </View>
+        <View style={{ marginLeft: 10, marginRight: -10 }}>
+          <Boton text="Encender"
+            onClick={() => navigation.navigate('InfoDispositivo')}
+            type="aceptar"
+          />
+        </View>
         <View style={{ marginTop: 30 }}>
-        <Boton text="Apagar" 
-            onClick={() => navigation.navigate('InfoDispositivo')} 
-            type= "cancelar"
-            />
+          <Boton text="Apagar"
+            onClick={() => navigation.navigate('InfoDispositivo')}
+            type="cancelar"
+          />
         </View>
       </View>
 
       <View style={{ alignItems: "center", marginTop: 30 }}>
 
-        <Text style={Styles.texto}>¿Qué desea hacer?</Text>
+        {/*<Text style={Styles.texto}>¿Qué desea hacer?</Text>*/}
+
+        <TextoDripsy sx={{
+          fontSize: [20, 22, 24],
+          fontWeight: "bold"
+        }}>¿Qué desea hacer?</TextoDripsy>
 
       </View>
 
       <View style={Styles.opciones}>
-        <Boton text="Cambiar contraseña" 
-        onClick={() => navigation.navigate('CambiarContraseña')} 
-        type="principal"/>
+        <Boton text="Cambiar contraseña"
+          onClick={() => navigation.navigate('CambiarContraseña')}
+          type="principal" />
         <View style={Styles.opcionesBotones}>
-          <Boton text="Cambiar red wifi" 
-          onClick={() => navigation.navigate('CambiarRedWifi')} 
-          type="principal"/>
+          <Boton text="Cambiar red wifi"
+            onClick={() => navigation.navigate('CambiarRedWifi')}
+            type="principal" />
         </View>
         <View style={Styles.opcionesBotones}>
-          <Boton text="Ver invitados" 
-          onClick={() => navigation.navigate('VerInvitados')} 
-          type="principal"/>
+          <Boton text="Ver invitados"
+            onClick={() => navigation.navigate('VerInvitados')}
+            type="principal" />
         </View>
         <View style={Styles.opcionesBotones}>
-          <Boton text="Historial" 
-          onClick={() => navigation.navigate('VerHistorial')} 
-          type="principal"/>
+          <Boton text="Historial"
+            onClick={() => navigation.navigate('VerHistorial')}
+            type="principal" />
         </View>
         <View style={Styles.opcionesBotones}>
-          <Boton text="Eliminar dispositivo" 
-          onClick={() => navigation.navigate('EliminarDispositivo')} 
-          type="principal"/>
+          <Boton text="Eliminar dispositivo"
+            onClick={() => navigation.navigate('EliminarDispositivo')}
+            type="principal" />
         </View>
       </View>
 
@@ -99,13 +112,13 @@ const Styles = StyleSheet.create({
   },
 
   botonE: {
-textAlign: "center",
-fontSize: 17,
-backgroundColor: "rgb(17, 216, 17)",
-color: "white",
-padding: 10,
-textTransform: "uppercase",
-borderRadius: 30,
+    textAlign: "center",
+    fontSize: 17,
+    backgroundColor: "rgb(17, 216, 17)",
+    color: "white",
+    padding: 10,
+    textTransform: "uppercase",
+    borderRadius: 30,
   },
   botonA: {
     textAlign: "center",
@@ -114,6 +127,6 @@ borderRadius: 30,
     color: "white",
     padding: 10,
     textTransform: "uppercase",
-    borderRadius: 30, 
+    borderRadius: 30,
   }
 })

@@ -9,6 +9,8 @@ import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 
+import { validateEmail } from '../../Helpers/Helpers';
+
 export default function Register({ navigation }) {
 
   const [data, setData] = React.useState({
@@ -23,6 +25,60 @@ export default function Register({ navigation }) {
       secureTextEntry: !data.secureTextEntry
     });
   }
+  const [formData, setFormData] = React.useState(defaultFormValues())
+  const [errorEmail, setErrorEmail] = React.useState("")
+  const [errorPassword, setErrorPassword] = React.useState("")
+  const [errorConfirm, setErrorConfirm] = React.useState("")
+  //const [loading, setLoading] = useState(false)
+
+  const onChange = (e, type) => {
+    setFormData({ ...formData, [type]: e.nativeEvent.text })
+  }
+
+  const registerUser = () => {
+    if (!validateData()) {
+      return;
+    }
+    navigation.navigate('MostrarSensores')
+  }
+
+
+  const validateData = () => {
+    setErrorEmail("")
+    setErrorPassword("")
+    let isValid = true
+
+    if (!validateEmail(formData.email)) {
+      setErrorEmail("Debes ingresar un email valido.")
+      isValid = false
+    }
+    if (formData.email == "") {
+      setErrorEmail("Debe ingresar un email.")
+      isValid = false
+    }
+    if (formData.email !== "ignacio@hola.com" & validateEmail(formData.email)) {
+      setErrorEmail("Email incorrecto.")
+      isValid = false
+    }
+    if (formData.password == "") {
+      setErrorPassword("Debe ingresar una contraseña.")
+      isValid = false
+    }
+    if (formData.password !== "123456" & formData.password !== "") {
+      setErrorPassword("Contraseña incorrecta.")
+      isValid = false
+    }
+    if (formData.confirm !== formData.password & formData.confirm !== "") {
+      setErrorConfirm("La confirmacion no coincide.")
+      isValid = false
+    }
+    if (formData.confirm == "") {
+      setErrorConfirm("Debes volver a ingresar la contraseña.")
+      isValid = false
+    }
+
+    return isValid
+  }
 
   return (
     <View style={Styles.container}>
@@ -33,19 +89,38 @@ export default function Register({ navigation }) {
 
       <View style={Styles.registerContainer}>
 
-        <Input
+        {/*<Input
           placeholder="Ingrese su mail"
           icono={
             <FontAwesomeIcon icon={faUser} />
           }
-        />
+        />*/}
 
+        <View style={Styles.input}>
+          <FontAwesomeIcon icon={faUser} style={Styles.icono} />
+          <TextInput
+            placeholder='Ingrese su mail'
+            autoCapitalize='none'
+            errorMessage={errorEmail}
+            onChange={(e) => onChange(e, "email")}
+            defaultValue={formData.email}
+          />
+        </View>
+        {errorEmail !== null ?
+          <Text style={Styles.mensajeError}>{errorEmail}</Text>
+          :
+          null
+        }
 
         <View style={Styles.input}>
           <FontAwesomeIcon icon={faLock} style={Styles.icono} />
           <TextInput
             placeholder='Ingrese su contraseña'
             secureTextEntry={data.secureTextEntry ? true : false}
+            autoCapitalize='none'
+            errorMessage={errorPassword}
+            onChange={(e) => onChange(e, "password")}
+            defaultValue={formData.password}
           />
           <TouchableOpacity
             onPress={updateSecureTextEntry}
@@ -57,13 +132,21 @@ export default function Register({ navigation }) {
             }
           </TouchableOpacity>
         </View>
-
+        {errorPassword !== null ?
+          <Text style={Styles.mensajeError}>{errorPassword}</Text>
+          :
+          null
+        }
 
         <View style={Styles.input}>
           <FontAwesomeIcon icon={faLock} style={Styles.icono} />
           <TextInput
             placeholder='Su contraseña de nuevo'
             secureTextEntry={data.secureTextEntry ? true : false}
+            autoCapitalize='none'
+            errorMessage={errorConfirm}
+            onChange={(e) => onChange(e, "confirm")}
+            defaultValue={formData.confirm}
           />
           <TouchableOpacity
             onPress={updateSecureTextEntry}
@@ -75,12 +158,17 @@ export default function Register({ navigation }) {
             }
           </TouchableOpacity>
         </View>
-
+        {errorPassword !== null ?
+          <Text style={Styles.mensajeError}>{errorConfirm}</Text>
+          :
+          null
+        }
 
         <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
           <View>
             <Boton text="Registrarse"
-              onClick={() => navigation.navigate('MostrarSensores')}
+             onClick={() => registerUser()}
+              //onClick={() => navigation.navigate('MostrarSensores')}
               type="principal" />
           </View>
 
@@ -98,6 +186,10 @@ export default function Register({ navigation }) {
 
     </View>
   );
+}
+
+const defaultFormValues = () => {
+  return { email: "", password: "", confirm: "" }
 }
 
 const Styles = StyleSheet.create({
@@ -153,6 +245,10 @@ const Styles = StyleSheet.create({
     color: "white",
     backgroundColor: "orange",
     borderRadius: 30
+  },
+  mensajeError: {
+    marginLeft: 40,
+    color: "red"
   }
 
 })

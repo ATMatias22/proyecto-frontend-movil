@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { View, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, TouchableOpacity } from 'react-native';
 import { FontAwesomeIcon } from '@fortawesome/react-native-fontawesome';
 import Boton from '../../Componentes/Boton/Index';
 
@@ -8,10 +8,11 @@ import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 
+
 export default function AgregarDispositivo({ navigation }) {
 
     const [data, setData] = React.useState({
-        codigo: "",
+        code: "",
         password: "",
         secureTextEntry: true
     });
@@ -22,6 +23,54 @@ export default function AgregarDispositivo({ navigation }) {
             secureTextEntry: !data.secureTextEntry
         });
     }
+
+    const [formData, setFormData] = React.useState(defaultFormValues())
+    const [errorCode, setErrorCode] = React.useState("")
+    const [errorPassword, setErrorPassword] = React.useState("")
+
+    const onChange = (e, type) => {
+        setFormData({ ...formData, [type]: e.nativeEvent.text })
+    }
+
+    const agregarDisp = () => {
+        if (!validateData()) {
+            return;
+        }
+        navigation.navigate('MostrarSensores')
+    }
+
+
+    const validateData = () => {
+        setErrorCode("")
+        setErrorPassword("")
+        let isValid = true
+
+        if (formData.code !== "coddisp1" & formData.code !== "") {
+            setErrorCode("Debes ingresar un codigo valido.")
+            isValid = false
+            console.log("codigo mal")
+        }
+
+        if (formData.code == "" ) {
+            setErrorCode("Debes ingresar un codigo.")
+            isValid = false
+            // console.log("codigo mal")
+        }
+
+        if (formData.password == "") {
+            setErrorPassword("Debes ingresar una contraseña.")
+            isValid = false
+            // console.log("contraseña mal")
+        }
+
+        if (formData.password !== "222222" & formData.password !=="") {
+            setErrorPassword("Contraseña incorrecta.")
+            isValid = false
+            // console.log("contraseña mal")
+        }
+
+        return isValid
+    }
     return (
         <View style={Styles.container} >
 
@@ -31,8 +80,17 @@ export default function AgregarDispositivo({ navigation }) {
                     <FontAwesomeIcon icon={faCode} style={Styles.icono} />
                     <TextInput
                         placeholder='Ingresar codigo'
+                        autoCapitalize='none'
+                        errorMessage={errorCode}
+                        onChange={(e) => onChange(e, "code")}
+                        defaultValue={formData.code}
                     />
                 </View>
+                {errorCode !== null ?
+                    <Text style={Styles.mensajeError}>{errorCode}</Text>
+                    :
+                    null
+                }
 
                 <View style={Styles.input}>
 
@@ -40,6 +98,9 @@ export default function AgregarDispositivo({ navigation }) {
                     <TextInput
                         placeholder='Ingresar contraseña'
                         secureTextEntry={data.secureTextEntry ? true : false}
+                        errorMessage={errorPassword}
+                        onChange={(e) => onChange(e, "password")}
+                        defaultValue={formData.password}
                     />
                     <TouchableOpacity
                         onPress={updateSecureTextEntry}>
@@ -50,12 +111,18 @@ export default function AgregarDispositivo({ navigation }) {
                         }
                     </TouchableOpacity>
                 </View>
+                {errorPassword !== null ?
+                    <Text style={Styles.mensajeError}>{errorPassword}</Text>
+                    :
+                    null
+                }
 
                 <View style={Styles.botonAgregarDisp}>
                     <View>
-                        <Boton text="Agregar dispositivo" 
-                        onClick={() => navigation.navigate('MostrarSensores')} 
-                        type="principal"/>
+                        <Boton text="Agregar dispositivo"
+                            onClick={() => agregarDisp()}
+                            // onClick={() => navigation.navigate('MostrarSensores')} 
+                            type="principal" />
                     </View>
                 </View>
 
@@ -64,6 +131,10 @@ export default function AgregarDispositivo({ navigation }) {
 
         </View>
     );
+}
+
+const defaultFormValues = () => {
+    return { code: "", password: "" }
 }
 
 const Styles = StyleSheet.create({
@@ -105,5 +176,9 @@ const Styles = StyleSheet.create({
         marginRight: 60,
         marginTop: 20,
         marginBottom: 20
+    },
+    mensajeError: {
+      marginLeft: 40,
+      color: "red"
     }
 })

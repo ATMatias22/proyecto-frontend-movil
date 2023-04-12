@@ -7,7 +7,7 @@ import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 
-export default function CambiarContraseña({ navigation }) {
+export default function CambiarContraseñaPerfil({ navigation }) {
 
     const [data, setData] = React.useState({
         password: "",
@@ -30,34 +30,33 @@ export default function CambiarContraseña({ navigation }) {
         setFormData({ ...formData, [type]: e.nativeEvent.text })
     }
 
-    const cambiarContraseñaDisp = () => {
+    const cambiarContraseñaPerfil = () => {
         if (!validateData()) {
             return;
         }
-        navigation.navigate('InfoDispositivo')
+        navigation.navigate('MostrarSensores')
     }
 
 
     const validateData = () => {
-        setErrorPassword("")
         setErrorConfirm("")
+        setErrorPassword("")
         let isValid = true
 
-        if (formData.password !== "654321" & formData.password !== "") {
+        if (formData.password !== "hola123" & formData.password !== "") {
             setErrorPassword("Contraseña incorrecta.")
             isValid = false
         }
         if (formData.password == "") {
-            setErrorPassword("Debes ingresar una contraseña.")
+            setErrorPassword("Debes ingresar una contrasseña.")
             isValid = false
         }
-        if (formData.confirm !== formData.password & formData.confirm !== "") {
-            setErrorConfirm("La confirmacion no coincide.")
+        if (formData.confirm !== formData.password) {
+            setErrorConfirm("Las contraseñas no son iguales.")
             isValid = false
         }
-
         if (formData.confirm == "") {
-            setErrorConfirm("Debe volver a ingresar la contraseña.")
+            setErrorConfirm("Debes volver a ingresar la contraseña.")
             isValid = false
         }
 
@@ -113,15 +112,15 @@ export default function CambiarContraseña({ navigation }) {
                     </TouchableOpacity>
                 </View>
                 {errorConfirm !== null ?
-                    <Text style={Styles.mensajeError}>{errorConfirm}</Text>
-                    :
-                    null
-                }
+          <Text style={Styles.mensajeError}>{errorConfirm}</Text>
+          :
+          null
+        }
 
                 <View style={Styles.botonCambiarCont}>
                     <Boton text="Cambiar contraseña"
-                        onClick={() => cambiarContraseñaDisp()}
-                        //onClick={() => navigation.navigate('InfoDispositivo')} 
+                        onClick={() => cambiarContraseñaPerfil()}
+                        //onClick={() => navigation.navigate('InfoDispositivo')}
                         type="principal" />
                 </View>
 
@@ -134,6 +133,7 @@ export default function CambiarContraseña({ navigation }) {
 const defaultFormValues = () => {
     return { password: "", confirm: "" }
 }
+
 
 const Styles = StyleSheet.create({
     container: {
@@ -152,7 +152,6 @@ const Styles = StyleSheet.create({
         borderColor: "#f1f1f1",
         borderWidth: 1,
         borderRadius: 30,
-        // paddingStart:30,
         marginLeft: 10,
         marginRight: 10,
         marginTop: 20,
@@ -176,7 +175,7 @@ const Styles = StyleSheet.create({
         marginBottom: 20
     },
     mensajeError: {
-        marginLeft: 40,
-        color: "red"
+      marginLeft: 40,
+      color: "red"
     }
 })

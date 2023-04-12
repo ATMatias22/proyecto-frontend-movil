@@ -5,12 +5,17 @@ import Boton from '../../Componentes/Boton/Index';
 
 import { faTrash } from '@fortawesome/free-solid-svg-icons/faTrash'
 
+import { Text as TextoDripsy } from 'dripsy';
+
 export default function VerHistorial({ navigation }) {
   return (
     <View style={Styles.container}>
 
       <View style={{ alignItems: "center", marginTop: 20 }}>
-        <Text style={{ fontSize: 20 }}>Nombre del dispositivo</Text>
+        {/*<Text style={{ fontSize: 20 }}>Nombre del dispositivo</Text>*/}
+        <TextoDripsy sx={{
+          fontSize: [20, 25, 30],
+        }}>Nombre del dispositivo</TextoDripsy>
       </View>
 
       <View style={Styles.vaciarHistorial}>
@@ -29,11 +34,26 @@ type="secundario" />*/}
         <View style={Styles.historial2Container}>
           <View style={{ marginLeft: 5, marginRight: 5 }}>
 
-            <Text style={{ textAlign: "center", marginTop: 5 }}>Se ABRIÓ la puerta</Text>
+            {/*<Text style={{ textAlign: "center", marginTop: 5 }}>Se ABRIÓ la puerta</Text>*/}
+            <TextoDripsy sx={{
+              fontSize: [14, 14, 16],
+              textAlign: "center",
+              marginTop: 1
+            }}>Se ABRIÓ la puerta</TextoDripsy>
 
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 10, padding: 5 }}>fecha</Text>
-              <Text style={{ fontSize: 10, padding: 5, marginLeft: 175 }}>hora</Text>
+              {/*<Text style={{ fontSize: 10, padding: 5 }}>fecha</Text>*/}
+              <TextoDripsy sx={{
+                fontSize: [10, 12, 14],
+                padding: 2
+              }}>fecha</TextoDripsy>
+
+              {/*<Text style={{ fontSize: 10, padding: 5, marginLeft: 175 }}>hora</Text>*/}
+              <TextoDripsy sx={{
+                fontSize: [10, 12, 14],
+                padding: 2,
+                marginLeft: "auto"
+              }}>hora</TextoDripsy>
             </View>
           </View>
         </View>
@@ -41,11 +61,26 @@ type="secundario" />*/}
         <View style={Styles.historial2Container}>
           <View style={{ marginLeft: 5, marginRight: 5 }}>
 
-            <Text style={{ textAlign: "center", marginTop: 5 }}>Se CERRÓ la puerta</Text>
+            {/*<Text style={{ textAlign: "center", marginTop: 5 }}>Se CERRÓ la puerta</Text>*/}
+            <TextoDripsy sx={{
+              fontSize: [14, 14, 16],
+              textAlign: "center",
+              marginTop: 1
+            }}>Se CERRÓ la puerta</TextoDripsy>
 
             <View style={{ flexDirection: "row" }}>
-              <Text style={{ fontSize: 10, padding: 5 }}>fecha</Text>
-              <Text style={{ fontSize: 10, padding: 5, marginLeft: 175 }}>hora</Text>
+              {/*<Text style={{ fontSize: 10, padding: 5 }}>fecha</Text>*/}
+              <TextoDripsy sx={{
+                fontSize: [10, 12, 14],
+                padding: 2
+              }}>fecha</TextoDripsy>
+
+              {/*<Text style={{ fontSize: 10, padding: 5, marginLeft: 175 }}>hora</Text>*/}
+              <TextoDripsy sx={{
+                fontSize: [10, 12, 14],
+                padding: 2,
+                marginLeft: "auto"
+              }}>hora</TextoDripsy>
             </View>
           </View>
         </View>
