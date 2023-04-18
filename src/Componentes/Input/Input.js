@@ -65,7 +65,7 @@ export default Input;
 const Styles = StyleSheet.create({
     input: {
         marginBottom: 10,
-        borderColor: "#f1f1f1",
+        borderColor: "blue",
         borderWidth: 1,
         borderRadius: 30,
         marginLeft: 10,

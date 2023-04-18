@@ -139,15 +139,21 @@ const defaultFormValues = () => {
 
 const Styles = StyleSheet.create({
     container: {
-        backgroundColor: "orange",
+        backgroundColor: "white",
         flex: 1
     },
     formContainer: {
-        marginTop: 90,
-        marginLeft: 10,
-        marginRight: 10,
+        marginTop: 40,
+        marginLeft: 17,
+        marginRight: 17,
         padding: 5,
-        backgroundColor: "#f1f1f1",
+        backgroundColor: "white",
+        borderRadius:30,
+        borderWidth: 3,
+        borderColor: "#FF8800",
+
+       
+        
     },
     input: {
         marginBottom: 10,
@@ -159,8 +165,11 @@ const Styles = StyleSheet.create({
         marginRight: 10,
         marginTop: 20,
         padding: 10,
-        backgroundColor: "#fff",
-        flexDirection: "row"
+        backgroundColor: "#EDEAEA",
+        flexDirection: "row",
+        borderRadius:30,
+        borderWidth: 3,
+        borderColor: "#FF8800",
     },
     icono: {
         marginRight: 5,
@@ -176,9 +185,5 @@ const Styles = StyleSheet.create({
         marginRight: 60,
         marginTop: 20,
         marginBottom: 20
-    },
-    mensajeError: {
-      marginLeft: 40,
-      color: "red"
     }
 })

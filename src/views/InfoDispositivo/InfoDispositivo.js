@@ -83,7 +83,7 @@ export default function InfoDispositivo({ navigation }) {
 
 const Styles = StyleSheet.create({
   container: {
-    backgroundColor: "orange",
+    backgroundColor: "white",
     flex: 1
   },
   nombreDispositivo: {
@@ -112,13 +112,13 @@ const Styles = StyleSheet.create({
   },
 
   botonE: {
-    textAlign: "center",
-    fontSize: 17,
-    backgroundColor: "rgb(17, 216, 17)",
-    color: "white",
-    padding: 10,
-    textTransform: "uppercase",
-    borderRadius: 30,
+  textAlign: "center",
+  fontSize: 17,
+  backgroundColor: "#11d811",
+  color: "white",
+  padding: 10,
+  textTransform: "uppercase",
+  borderRadius: 30,
   },
   botonA: {
     textAlign: "center",
@@ -127,6 +127,6 @@ const Styles = StyleSheet.create({
     color: "white",
     padding: 10,
     textTransform: "uppercase",
-    borderRadius: 30,
+    borderRadius: 30, 
   }
 })

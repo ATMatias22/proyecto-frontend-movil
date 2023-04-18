@@ -94,34 +94,46 @@ type="secundario" />*/}
 
 const Styles = StyleSheet.create({
   container: {
-    backgroundColor: "orange",
+    backgroundColor: "white",
     flex: 1
   },
   historialContainer: {
-    marginTop: 10,
+    marginTop: 50,
     marginBottom: 10,
     marginHorizontal: 20,
+    marginLeft: 17,
+    marginRight: 17,
     padding: 5,
-    backgroundColor: "#f1f1f1",
-    borderColor: "#f1f1f1"
+    backgroundColor: "white",
+    borderRadius: 30,
+    borderColor: "#FF8800",
+    borderWidth: 2,
   },
+
+  
   historial2Container: {
-    marginTop: 10,
+    marginLeft: 17,
+    marginRight: 17,
+    marginTop: 15,
     marginBottom: 10,
-    borderWidth: 1,
+    borderWidth: 2,
     borderRadius: 10,
     marginHorizontal: 30,
-    backgroundColor: "#fff",
-    borderColor: "#fff"
+    backgroundColor: "#EDEAEA",
+    borderColor: "#FF8800",
+    borderRadius: 30
   },
   vaciarHistorial: {
+    
     alignItems: "center",
-    marginTop: 10,
-    backgroundColor: "#fff",
-    padding: 5,
-    marginLeft: 110,
-    marginRight: 110,
-    borderRadius: 30
+    marginTop: 20,    
+    backgroundColor: "#FF8800",
+    padding: 15,
+    marginLeft: 50,
+    marginRight: 50,
+    borderRadius: 30,
+    
+    
   },
   icono: {
     padding: 5,

@@ -1,46 +1,53 @@
-import { StyleSheet } from 'react-native';
+import { StyleSheet } from "react-native";
 
 export const botonEstilos = StyleSheet.create({
+  principal: {
+    fontWeight: "bold",
+    fontSize: 15,
+    textTransform: "uppercase",
+    padding: 10,
+    textAlign: "center",
+    color: "white",
+    backgroundColor: "#FF8800",
+    borderRadius: 30,
+    borderColor: "#BF8139",
+    width: "145%",
+    background: "#fdc830",
+    alignSelf: "center",
+  },
+  secundario: {
+    fontWeight: "bold",
+    textTransform: "uppercase",
+    textAlign: "center",
+    backgroundColor: "#FF8800",
+    color: "white",
+    padding: 5,
+    borderRadius: 30,
+    borderWidth: 3,
+    borderColor: "#FF8800",
+    alignSelf: "center",
+  },
 
-    principal: {
-      fontWeight: "bold",
-      fontSize: 16,
-      textTransform: "uppercase",
-      padding: 10,
-      textAlign: "center",
-      color: "white",
-      backgroundColor: "orangered",
-      borderRadius: 30
-    },
-    secundario: {
-      fontWeight: "bold",
-      textTransform: "uppercase",
-      textAlign: "center",
-      backgroundColor: "rgb(245, 190, 10)",
-      color: "rgb(248, 67, 12)",
-      padding: 7,
-      borderRadius: 30,
-    },
-    aceptar: {
+  aceptar: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 14,
     backgroundColor: "rgb(17, 216, 17)",
     color: "white",
-    padding: 15,
+    padding: 14,
     textTransform: "uppercase",
     marginRight: 10,
-    borderRadius: 30
-    },
-    cancelar: {
+    borderRadius: 30,
+  },
+  cancelar: {
     textAlign: "center",
     fontWeight: "bold",
-    fontSize: 17,
+    fontSize: 14,
     backgroundColor: "red",
     color: "white",
-    padding: 15,
+    padding: 14,
     textTransform: "uppercase",
     marginLeft: 10,
-    borderRadius: 30
-    }
-  });
+    borderRadius: 30,
+  },
+});

@@ -137,27 +137,30 @@ const defaultFormValues = () => {
 
 const Styles = StyleSheet.create({
     container: {
-        backgroundColor: "orange",
+        backgroundColor: "white",
         flex: 1
     },
     formContainer: {
         marginTop: 90,
-        marginLeft: 10,
-        marginRight: 10,
+        marginLeft: 17,
+        marginRight: 17,
         padding: 5,
-        backgroundColor: "#f1f1f1",
+        backgroundColor: "white",
+        borderRadius: 30,
+        borderColor: "#FF8800",
+        borderWidth: 2,
     },
     input: {
         marginBottom: 10,
-        borderColor: "#f1f1f1",
-        borderWidth: 1,
+        borderColor: "#FF8800",
+        borderWidth: 2,
         borderRadius: 30,
         // paddingStart:30,
-        marginLeft: 10,
-        marginRight: 10,
+        marginLeft: 5,
+        marginRight: 5,
         marginTop: 20,
         padding: 10,
-        backgroundColor: "#fff",
+        backgroundColor: "#EDEAEA",
         flexDirection: "row"
     },
     icono: {
@@ -165,18 +168,14 @@ const Styles = StyleSheet.create({
         marginTop: 5
     },
     iconoOjo: {
-        marginRight: 5,
+        marginRight:5,
         marginTop: 5,
-        marginLeft: 20
+        marginLeft:7,
     },
     botonCambiarCont: {
         marginLeft: 60,
         marginRight: 60,
         marginTop: 20,
         marginBottom: 20
-    },
-    mensajeError: {
-        marginLeft: 40,
-        color: "red"
     }
 })

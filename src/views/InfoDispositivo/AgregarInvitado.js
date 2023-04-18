@@ -103,11 +103,15 @@ const Styles = StyleSheet.create({
         flex: 1
     },
     formContainer: {
-        marginTop: 90,
-        marginLeft: 10,
-        marginRight: 10,
-        padding: 5,
-        backgroundColor: "#f1f1f1",
+    marginLeft: 17,
+    marginRight: 17,
+    padding: 5,
+    backgroundColor: "white",
+    alignItems: "center", 
+    marginTop:40,
+    borderRadius:30,
+    borderWidth: 3,
+    borderColor: "#FF8800",
     },
     input: {
         marginBottom: 10,
@@ -131,9 +135,5 @@ const Styles = StyleSheet.create({
         marginRight: 60,
         marginTop: 20,
         marginBottom: 20
-    },
-    mensajeError: {
-        marginLeft: 40,
-        color: "red"
     }
 })
