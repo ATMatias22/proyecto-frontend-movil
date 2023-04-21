@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  Modal
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Boton from "../../Componentes/Boton/Index";
@@ -14,10 +15,15 @@ import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 import { faEnvelope } from "@fortawesome/free-solid-svg-icons/faEnvelope";
 import { faCakeCandles } from "@fortawesome/free-solid-svg-icons/faCakeCandles";
 import { faFlag } from "@fortawesome/free-solid-svg-icons/faFlag";
+import { faCalendar } from "@fortawesome/free-solid-svg-icons/faCalendar"
 
 import { validateEmail } from "../../Helpers/Helpers";
 
+import DatePicker from "react-native-modern-datepicker";
+import { getToday, getFormatedDate } from "react-native-modern-datepicker";
+
 export default function ModificarPerfil({ navigation }) {
+
   const [formData, setFormData] = React.useState(defaultFormValues());
   const [errorNombre, setErrorNombre] = React.useState("");
   const [errorApellido, setErrorApellido] = React.useState("");
@@ -25,6 +31,25 @@ export default function ModificarPerfil({ navigation }) {
   const [errorNacimiento, setErrorNacimiento] = React.useState("");
   const [errorNacionalidad, setErrorNacionalidad] = React.useState("");
   //const [loading, setLoading] = useState(false)
+
+
+  const [open, setOpen] = React.useState(false); //abre y cierra el modal
+
+  const [date, setDate] = React.useState(new Date()); //variable de date
+
+  const today = getToday();
+
+  const [isSelected, setIsSelected] = React.useState(false);
+
+
+  function handleOnPress() {
+    setOpen(!open);
+  }
+
+  function onDateSelected(value) {
+    setDate(value);
+    setIsSelected(true);
+  }
 
   const onChange = (e, type) => {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
@@ -61,14 +86,14 @@ export default function ModificarPerfil({ navigation }) {
       setErrorMail("Debes ingresar un email valido.");
       isValid = false;
     }
-    if (formData.nacimiento == "") {
-      setErrorNacimiento("Debes ingresar una fecha de nacimiento.");
+    if (isSelected == false) {
+      setErrorNacimiento("Debes ingresar una fecga de nacimiento")
       isValid = false;
     }
-    //falta la validacion de si es una fecha
-    //-------------------------------------
-
-    //---------------------------------------
+    if (date >= today) {
+      setErrorNacimiento("Debes ingresar una fecha de nacimiento valida")
+      isValid = false;
+    }
     if (formData.nacionalidad == "") {
       setErrorNacionalidad("Debes ingresar una nacionalidad.");
       isValid = false;
@@ -150,7 +175,7 @@ export default function ModificarPerfil({ navigation }) {
                     }
                 />*/}
 
-        <View style={Styles.input}>
+        {/*<View style={Styles.input}>
           <FontAwesomeIcon icon={faCakeCandles} style={Styles.icono} />
           <TextInput
             placeholder="Ingrese su fecha de nacimiento"
@@ -163,13 +188,64 @@ export default function ModificarPerfil({ navigation }) {
         {errorNacimiento !== null ? (
           <Text style={Styles.mensajeError}>{errorNacimiento}</Text>
         ) : null}
-
+        */}
         {/*<Input
                     placeholder="Nacionalidad"
                     icono={
                         <FontAwesomeIcon icon={faFlag} />
                     }
                 />*/}
+
+        <View style={Styles.input}>
+          <FontAwesomeIcon icon={faCakeCandles} style={Styles.icono} />
+          <TextInput
+            placeholder="Ingrese fecha"
+            editable={false}
+            errorMessage={errorNacimiento}
+            onChange={(e) => onChange(e, "nacimiento")}
+            value={date == null ? "" : date}
+          />
+          <TouchableOpacity onPress={handleOnPress}>
+            <FontAwesomeIcon icon={faCalendar} style={[Styles.icono, {marginLeft: 140}]} />
+          </TouchableOpacity>
+
+          <Modal
+            animationType="slide"
+            transparent={true}
+            visible={open}
+          >
+            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+              <View style={Styles.modalView}>
+                <DatePicker
+                  mode="calendar"
+                  onSelectedChange={date => {
+                    onDateSelected(date)
+                  }}
+                  options={{
+                    textFontSize: 13,
+                    selectedTextColor: "#fff",
+                    mainColor: "#F47228",
+                    backgroundColor: "#f1f1f1",
+                    textSecondaryColor: "#F4722B"
+                  }}
+                  style={{ borderRadius: 20 }}
+                />
+
+                <TouchableOpacity onPress={handleOnPress}>
+                  <Text style={{ marginTop: 10, marginBottom: -10, color: "#F4722B" }} >
+                    Cerrar
+                  </Text>
+                </TouchableOpacity>
+              </View>
+            </View>
+          </Modal>
+
+        </View>
+        {errorNacimiento !== null ? (
+          <Text style={Styles.mensajeError}>{errorNacimiento}</Text>
+        ) : null}
+
+
         <View style={Styles.input}>
           <FontAwesomeIcon icon={faFlag} style={Styles.icono} />
           <TextInput
@@ -201,11 +277,11 @@ export default function ModificarPerfil({ navigation }) {
 
 const defaultFormValues = () => {
   return {
-    Nombre: "",
-    Apellido: "",
-    Mail: "",
-    Nacimiento: "",
-    Nacionalidad: "",
+    nombre: "",
+    apellido: "",
+    mail: "",
+    nacimiento: "",
+    nacionalidad: "",
   };
 };
 
@@ -251,4 +327,18 @@ const Styles = StyleSheet.create({
     marginLeft: 40,
     color: "red",
   },
+  modalView: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    alignItems: "center",
+    padding: 25,
+    width: "93%",
+    showOffSet: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 7
+  }
 });

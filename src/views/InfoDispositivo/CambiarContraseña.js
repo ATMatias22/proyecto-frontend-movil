@@ -177,5 +177,9 @@ const Styles = StyleSheet.create({
         marginRight: 60,
         marginTop: 20,
         marginBottom: 20
-    }
+    },
+    mensajeError: {
+      marginLeft: 40,
+      color: "red",
+    },
 })
