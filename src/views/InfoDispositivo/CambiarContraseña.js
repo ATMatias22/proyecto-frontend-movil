@@ -23,7 +23,7 @@ export default function CambiarContraseña({ navigation }) {
 
     const [formData, setFormData] = React.useState(defaultFormValues())
     const [errorPassword, setErrorPassword] = React.useState("")
-    const [errorConfirm, setErrorConfirm] = React.useState("")
+    const [errorNewPassword, setErrorNewPassword] = React.useState("")
     //const [loading, setLoading] = useState(false)
 
     const onChange = (e, type) => {
@@ -40,7 +40,7 @@ export default function CambiarContraseña({ navigation }) {
 
     const validateData = () => {
         setErrorPassword("")
-        setErrorConfirm("")
+        setErrorNewPassword("")
         let isValid = true
 
         if (formData.password !== "654321" & formData.password !== "") {
@@ -48,16 +48,13 @@ export default function CambiarContraseña({ navigation }) {
             isValid = false
         }
         if (formData.password == "") {
-            setErrorPassword("Debes ingresar una contraseña.")
-            isValid = false
-        }
-        if (formData.confirm !== formData.password & formData.confirm !== "") {
-            setErrorConfirm("La confirmacion no coincide.")
+            setErrorPassword("Debe ingresar la antigua contraseña.")
             isValid = false
         }
 
-        if (formData.confirm == "") {
-            setErrorConfirm("Debe volver a ingresar la contraseña.")
+
+        if (formData.newPassword == "") {
+            setErrorNewPassword("Debe ingresar una nueva contraseña.")
             isValid = false
         }
 
@@ -71,7 +68,7 @@ export default function CambiarContraseña({ navigation }) {
                 <View style={Styles.input}>
                     <FontAwesomeIcon icon={faLock} style={Styles.icono} />
                     <TextInput
-                        placeholder='Ingresar contraseña actual'
+                        placeholder='Ingrese contraseña actual'
                         secureTextEntry={data.secureTextEntry ? true : false}
                         errorMessage={errorPassword}
                         onChange={(e) => onChange(e, "password")}
@@ -83,7 +80,7 @@ export default function CambiarContraseña({ navigation }) {
                         {data.secureTextEntry ?
                             <FontAwesomeIcon icon={faEyeSlash} style={Styles.iconoOjo} />
                             :
-                            <FontAwesomeIcon icon={faEye} style={{ marginLeft: 80, marginTop: 5, marginRight: 5 }} />
+                            <FontAwesomeIcon icon={faEye} style={[Styles.iconoOjo, { marginLeft: 73 }]} />
                         }
                     </TouchableOpacity>
                 </View>
@@ -96,32 +93,32 @@ export default function CambiarContraseña({ navigation }) {
                 <View style={Styles.input}>
                     <FontAwesomeIcon icon={faLock} style={Styles.icono} />
                     <TextInput
-                        placeholder='Ingresar nueva contraseña'
+                        placeholder='Ingrese nueva contraseña'
                         secureTextEntry={data.secureTextEntry ? true : false}
-                        errorMessage={errorConfirm}
-                        onChange={(e) => onChange(e, "confirm")}
-                        defaultValue={formData.confirm}
+                        errorMessage={errorNewPassword}
+                        onChange={(e) => onChange(e, "newPassword")}
+                        defaultValue={formData.newPassword}
                     />
                     <TouchableOpacity
                         onPress={updateSecureTextEntry}
                     >
                         {data.secureTextEntry ?
-                            <FontAwesomeIcon icon={faEyeSlash} style={{ marginRight: 5, marginTop: 5, marginLeft: 29 }} />
+                            <FontAwesomeIcon icon={faEyeSlash} style={[Styles.iconoOjo, { marginLeft: 28 }]} />
                             :
-                            <FontAwesomeIcon icon={faEye} style={{ marginLeft: 80, marginTop: 5, marginRight: 5 }} />
+                            <FontAwesomeIcon icon={faEye} style={[Styles.iconoOjo, { marginLeft: 73 }]} />
                         }
                     </TouchableOpacity>
                 </View>
-                {errorConfirm !== null ?
-                    <Text style={Styles.mensajeError}>{errorConfirm}</Text>
+                {errorNewPassword !== null ?
+                    <Text style={Styles.mensajeError}>{errorNewPassword}</Text>
                     :
                     null
                 }
 
                 <View style={Styles.botonCambiarCont}>
                     <Boton text="Cambiar contraseña"
-                        onClick={() => cambiarContraseñaDisp()}
-                        //onClick={() => navigation.navigate('InfoDispositivo')} 
+                        onPress={() => cambiarContraseñaDisp()}
+                        //onPress={() => navigation.navigate('InfoDispositivo')} 
                         type="principal" />
                 </View>
 
@@ -132,7 +129,7 @@ export default function CambiarContraseña({ navigation }) {
 }
 
 const defaultFormValues = () => {
-    return { password: "", confirm: "" }
+    return { password: "", newPassword: "" }
 }
 
 const Styles = StyleSheet.create({
@@ -168,9 +165,10 @@ const Styles = StyleSheet.create({
         marginTop: 5
     },
     iconoOjo: {
-        marginRight:5,
-        marginTop: 5,
-        marginLeft:7,
+        alignSelf: "flex-end",
+        marginLeft: "auto",
+        marginTop: 7,
+        marginLeft: 20
     },
     botonCambiarCont: {
         marginLeft: 60,
@@ -179,7 +177,7 @@ const Styles = StyleSheet.create({
         marginBottom: 20
     },
     mensajeError: {
-      marginLeft: 40,
-      color: "red",
+        marginLeft: 40,
+        color: "red",
     },
 })

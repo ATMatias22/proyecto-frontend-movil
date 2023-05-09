@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import { View, Text, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Boton from "../../Componentes/Boton/Index";
 
@@ -7,25 +7,71 @@ import { Text as TextoDripsy } from "dripsy";
 
 import { faPlus } from "@fortawesome/free-solid-svg-icons/faPlus";
 
+import { useEffect } from "react"; //----------------------------------------
+
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import axios from "axios";
+
+
+import DispositivoDueño from "../../Componentes/DispositivoDueño/DispositivoDueño";
+
 export default function MostrarSensores({ navigation }) {
+
+  const [dispUsuario, setDispUsuario] = React.useState([]);
+
+
+  const getOwnerDevices = async () => {
+
+    const token = await AsyncStorage.getItem('@storage_Key');
+    let headers = {
+      headers: {
+
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    }
+
+    const peticion = await axios.get("http://192.168.0.176:8080/app_movil_sensor/api/device/own", headers)
+      .then(async res => {
+
+        setDispUsuario(res.data);
+
+      })
+      .catch(error =>
+        console.log(error),
+
+      );
+
+  }
+
+
+
+
+  useEffect(() => {
+    console.log("recargado")
+    getOwnerDevices();
+  }, []);
+
   return (
     <View style={Styles.container}>
+
+
       <View style={Styles.seleccionDispositivo}>
         <TouchableOpacity
           onPress={() => navigation.navigate("MostrarSensores")}
         >
           <TextoDripsy
             sx={{
-              // fontSize: [0, 1, 2],
-              fontSize: [10, 12, 14],
+              fontSize: [12, 14, 16],
               color: "#FF8800",
-              paddingLeft: 20,
               fontWeight: "bold",
             }}
           >
             Dispositivos en Propiedad
           </TextoDripsy>
-          {/*<Text style={{ fontSize: 10, color: "yellow", paddingLeft: 20 }}>dispositivos en propiedad</Text>*/}
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -34,52 +80,27 @@ export default function MostrarSensores({ navigation }) {
           <TextoDripsy
             sx={{
               // fontSize: [0, 1, 2],
-              fontSize: [10, 12, 14],
+              fontSize: [12, 14, 16],
               color: "#474B4E",
               paddingLeft: 20,
             }}
           >
-            dispositivos vinculados
+            Dispositivos Vinculados
           </TextoDripsy>
-          {/*<Text style={{ fontSize: 10, paddingLeft: 20, color: "white" }}>dispositivos en los que esta vinculado</Text>*/}
         </TouchableOpacity>
       </View>
 
-      <View style={Styles.dispositivo}>
-        <View style={{ marginLeft: 5 }}>
-          <TextoDripsy sx={Styles.textoDripsy}>
-            Nombre del dispositivo :
-          </TextoDripsy>
-          {/*<Text style={Styles.texto}>Nombre del dispositivo</Text>*/}
+      <ScrollView>
+        {dispUsuario.map((dato, index) => {
 
-          <TextoDripsy sx={Styles.textoDripsy}>
-            Dueño del dispositivo :
-          </TextoDripsy>
-          {/*<Text style={Styles.texto}>Dueño del dispositivo</Text>*/}
+          return <DispositivoDueño key={index} nombreDisp={dato.deviceName} invitados={dato.linkedPersons}
+            estadoWifi={dato.deviceWifiState} estadoDisp={dato.deviceStatus} nombreBoton="Ir al dispositivo" navegacion={() => 
+              navigation.navigate("InfoDispositivo", { dispositivo: dato.deviceCode, nombre: dato.deviceName })} />
 
-          <TextoDripsy sx={Styles.textoDripsy}>
-            Cantidad de personas vinculadas: X
-          </TextoDripsy>
-          {/*<Text style={Styles.texto}>Cantidad de personas vinculadas: X</Text>*/}
-        </View>
+        })}
+      </ScrollView>
 
-        <View style={{ marginRight: 170, marginLeft: 0, marginTop: 15 }}>
-          <Boton
-            text="Ir al dispositivo"
-            onClick={() => navigation.navigate("InfoDispositivo")}
-            type="secundario"
-          />
-        </View>
 
-        <View style={{ marginLeft: 90, flexDirection: "row", padding: 10 }}>
-          <TextoDripsy sx={Styles.textoDripsy2}>Estado Wifi:</TextoDripsy>
-          {/*<Text style={Styles.texto2}>EstadoWifi</Text>*/}
-
-          <TextoDripsy sx={Styles.textoDripsy2}>Encendido/apagado</TextoDripsy>
-
-          {/*<Text style={Styles.texto2}>Encendido/apagado</Text>*/}
-        </View>
-      </View>
 
       <View style={Styles.agregarDispositivo}>
         <TouchableOpacity
@@ -89,11 +110,7 @@ export default function MostrarSensores({ navigation }) {
         </TouchableOpacity>
       </View>
 
-      {/*} {
-        <TouchableOpacity onPress={() => navigation.navigate("Perfil")}>
-          <Text>Perfil</Text>
-        </TouchableOpacity>
-      }*/}
+
     </View>
   );
 }
@@ -104,38 +121,10 @@ const Styles = StyleSheet.create({
     flex: 1,
   },
   seleccionDispositivo: {
-    marginLeft: 10,
     marginTop: 20,
+    alignSelf: "center",
     flexDirection: "row",
-  },
-
-  /*botonIrDispositivo: {
-    textTransform: "uppercase",
-    textAlign: "center",
-    backgroundColor: "orangered",
-    color: "white",
-    padding: 5,
-    borderRadius: 30,
-  },*/
-  dispositivo: {
-    borderColor: "#FF8800",
-    borderRadius: 30,
-    borderWidth: 3,
-    marginRight: 17,
-    marginTop: 17,
-    marginLeft: 10,
-    marginRight: 10,
-    backgroundColor: "white",
-    padding: 10,
-    backgroundColor: "white",
-  },
-  texto: {
-    fontSize: 12,
-    paddingLeft: 10,
-  },
-  texto2: {
-    fontSize: 10,
-    paddingLeft: 20,
+    marginBottom: 20,
   },
   agregarDispositivo: {
     marginLeft: 20,
@@ -144,5 +133,7 @@ const Styles = StyleSheet.create({
     padding: 8,
     marginRight: "auto",
     borderRadius: 30,
+    marginBottom: 5,
   },
+
 });

@@ -1,5 +1,5 @@
 import * as React from "react";
-import { View, Text, Button, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, Button, StyleSheet, TouchableOpacity, Modal } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import { faTrash } from "@fortawesome/free-solid-svg-icons/faTrash";
@@ -7,7 +7,58 @@ import { faUserPlus } from "@fortawesome/free-solid-svg-icons/faUserPlus";
 
 import { Text as TextoDripsy } from "dripsy";
 
+import Boton from '../../Componentes/Boton/Index';
+
+import { useRoute } from '@react-navigation/native';
+
 export default function VerInvitados({ navigation }) {
+
+  const [open, setOpen] = React.useState(false);
+
+  function handleOnPress() {
+    setOpen(!open);
+  }
+
+  const route = useRoute();
+
+  const nombreDisp = route.params.nombre;
+  const codeDisp = route.params.codigo;
+
+
+
+
+
+  //getUser
+
+  /*const deleteObserver = async (mail) => {
+
+    let notification = JSON.stringify({
+      email: mail,
+      code: codeDisp
+    })
+
+    let headers = {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+
+
+    const peticion = await axios.delete("http://192.168.0.176:8080/app_movil_sensor/api/device/" + codeDisp + "/user/" + { email }, notification, headers)
+      .then(async res => {
+
+        navigation.navigate("verInvitados");
+
+      })
+      .catch(error =>
+        console.log(error)
+
+      );
+
+  }*/
+
+
   return (
     <View style={Styles.container}>
       <View style={{ alignItems: "center", marginTop: 20 }}>
@@ -20,13 +71,14 @@ export default function VerInvitados({ navigation }) {
             //backgroundColor: "#EDEAEA",
           }}
         >
-          Nombre del dispositivo
+          {nombreDisp}
         </TextoDripsy>
       </View>
 
+      {/**cambiar esto por un map */}
+      {/**---------------------------------------------------------------------------------------------------------------- */}
       <View style={Styles.invitadosContainer}>
         <View style={Styles.datosInvitadoContainer}>
-          {/*<Text style={Styles.texto}>Nombre de invitado</Text>*/}
 
           <TextoDripsy
             sx={{
@@ -35,11 +87,11 @@ export default function VerInvitados({ navigation }) {
               paddingTop: 3,
             }}
           >
-            Nombre de invitado:
+            Nombre de invitado:  {/** nombreInvitado   */}
           </TextoDripsy>
 
+
           <View style={{ flexDirection: "row" }}>
-            {/*<Text style={Styles.texto2}>Fecha de agregacion</Text>*/}
 
             <TextoDripsy
               sx={{
@@ -49,23 +101,61 @@ export default function VerInvitados({ navigation }) {
                 paddingLeft: 2,
               }}
             >
-              Fecha de agregacion:
+              Fecha de agregacion:  {/**  fechaAgregacion   */}
             </TextoDripsy>
 
-            <TouchableOpacity style={Styles.icono}>
+            <TouchableOpacity style={Styles.icono} onPress={handleOnPress}>
               <FontAwesomeIcon icon={faTrash} />
             </TouchableOpacity>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={open}
+            >
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <View style={Styles.modalView}>
+
+                  <Text>¿Esta seguro de querer desvincular a "AMIGO" del dispositivo: {nombreDisp}?</Text>
+
+                  <View style={{ flexDirection: "row", marginTop: 20 }}>
+
+                    <View >
+                      <Boton text="Aceptar"
+                      /**debe borrar al invitado */
+                        onPress={() => navigation.goBack()}
+                        type="aceptar"
+                      />
+                    </View>
+
+                    <View >
+                      <Boton text="Cancelar"
+                        onPress={handleOnPress}
+                        type="cancelar"
+                      />
+                    </View>
+
+                  </View>
+
+                </View>
+              </View>
+
+            </Modal>
+
           </View>
         </View>
 
         <View style={Styles.agregarInvitado}>
           <TouchableOpacity
-            onPress={() => navigation.navigate("AgregarInvitado")}
+            onPress={() => navigation.navigate("AgregarInvitado", { codigoDisp: codeDisp })}
           >
             <FontAwesomeIcon icon={faUserPlus} />
           </TouchableOpacity>
         </View>
       </View>
+
+
+      {/**---------------------------------------------------------------------------------------------------------------- */}
     </View>
   );
 }
@@ -111,16 +201,31 @@ const Styles = StyleSheet.create({
   },
   icono: {
     padding: 5,
-    marginLeft: 170,
+    marginLeft: "auto",
+    marginRight: 10,
   },
   agregarInvitado: {
     marginLeft: 10,
     marginBottom: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "#FF8800",
     padding: 8,
     marginRight: "auto",
     borderRadius: 30,
     borderWidth: 2,
     borderColor: "#FF8800",
   },
+  modalView: {
+    backgroundColor: "white",
+    borderRadius: 20,
+    alignItems: "center",
+    padding: 25,
+    width: "93%",
+    showOffSet: {
+      width: 0,
+      height: 2
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 7
+  }
 });

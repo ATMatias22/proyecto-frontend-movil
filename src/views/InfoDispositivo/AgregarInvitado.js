@@ -8,6 +8,12 @@ import { faEnvelope } from '@fortawesome/free-solid-svg-icons/faEnvelope'
 
 import { validateEmail } from '../../Helpers/Helpers';
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import axios from "axios";
+
+import { useRoute } from '@react-navigation/native';
+
 export default function AgregarInvitado({ navigation }) {
 
 
@@ -22,7 +28,9 @@ export default function AgregarInvitado({ navigation }) {
         if (!validateData()) {
             return;
         }
-        navigation.navigate('VerInvitados')
+        addInv(formData.mail)
+       // navigation.navigate('VerInvitados')
+      // navigation.goBack();
     }
 
 
@@ -42,6 +50,45 @@ export default function AgregarInvitado({ navigation }) {
 
         return isValid
     }
+
+    const route = useRoute();
+
+    const codeDisp = route.params.codigoDisp;
+  
+
+
+    const addInv = async (mail) => {
+
+        let notification = JSON.stringify({
+            email: mail,
+            deviceCode: codeDisp
+        })
+
+        const token = await AsyncStorage.getItem('@storage_Key');
+
+        let headers = {
+            headers: {
+
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }
+
+        const peticion = await axios.post("http://192.168.0.176:8080/app_movil_sensor/api/device/add-observer", notification, headers)
+            .then(async res => {
+
+                navigation.goBack();
+            })
+            .catch(error =>
+
+                console.log(error),
+                setErrorMail("Accceso denegado.")
+                // setLoading(false)
+            );
+
+    }
+
     return (
         <View style={Styles.container} >
 
@@ -80,8 +127,8 @@ export default function AgregarInvitado({ navigation }) {
                 <View style={Styles.botonAgregarInv}>
                     <View>
                         <Boton text="Agregar invitado"
-                            onClick={() => agregarInv()}
-                            //onClick={() => navigation.navigate('VerInvitados')}
+                            onPress={() => agregarInv()}
+                            //onPress={() => navigation.navigate('VerInvitados')}
                             type="principal" />
                     </View>
                 </View>
@@ -99,32 +146,31 @@ const defaultFormValues = () => {
 
 const Styles = StyleSheet.create({
     container: {
-        backgroundColor: "orange",
+        backgroundColor: "white",
         flex: 1
     },
     formContainer: {
-    marginLeft: 17,
-    marginRight: 17,
-    padding: 5,
-    backgroundColor: "white",
-    alignItems: "center", 
-    marginTop:40,
-    borderRadius:30,
-    borderWidth: 3,
-    borderColor: "#FF8800",
+        marginLeft: 17,
+        marginRight: 17,
+        padding: 5,
+        backgroundColor: "white",
+        alignItems: "center",
+        marginTop: 40,
+        borderRadius: 30,
+        borderWidth: 3,
+        borderColor: "#FF8800",
     },
     input: {
         marginBottom: 10,
-        borderColor: "#f1f1f1",
-        borderWidth: 1,
+        borderColor: "#FF8800",
+        borderWidth: 3,
         borderRadius: 30,
-        // paddingStart:30,
         marginLeft: 10,
         marginRight: 10,
         marginTop: 20,
         padding: 10,
-        backgroundColor: "#fff",
-        flexDirection: "row"
+        backgroundColor: "#EDEAEA",
+        flexDirection: "row",
     },
     icono: {
         marginRight: 5,
@@ -137,7 +183,7 @@ const Styles = StyleSheet.create({
         marginBottom: 20
     },
     mensajeError: {
-      //marginLeft: 40,
-      color: "red",
+        //marginLeft: 40,
+        color: "red",
     },
 })

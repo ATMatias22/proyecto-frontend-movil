@@ -105,7 +105,7 @@ export default function CambiarRedWifi({ navigation }) {
                         {data.secureTextEntry ?
                             <FontAwesomeIcon icon={faEyeSlash} style={Styles.iconoOjo} />
                             :
-                            <FontAwesomeIcon icon={faEye} style={{ marginLeft: 80, marginTop: 5, marginRight: 5 }} />
+                            <FontAwesomeIcon icon={faEye} style={Styles.iconoOjo} />
                         }
                     </TouchableOpacity>
                 </View>
@@ -119,8 +119,8 @@ export default function CambiarRedWifi({ navigation }) {
                 <View style={Styles.botonCambiarRed}>
                     <View>
                         <Boton text="Cambiar red"
-                            onClick={() => cambiarRedWifi()}
-                            // onClick={() => navigation.navigate('InfoDispositivo')}
+                            onPress={() => cambiarRedWifi()}
+                            // onPress={() => navigation.navigate('InfoDispositivo')}
                             type="principal" />
                     </View>
                 </View>
@@ -168,9 +168,10 @@ const Styles = StyleSheet.create({
         marginTop: 5
     },
     iconoOjo: {
-        marginRight: 5,
+        alignSelf: "flex-end",
+        marginLeft: "auto",
         marginTop: 5,
-        marginLeft: 80
+        marginLeft: 60
     },
     botonCambiarRed: {
         marginLeft: 60,
@@ -179,7 +180,7 @@ const Styles = StyleSheet.create({
         marginBottom: 20
     },
     mensajeError: {
-      marginLeft: 40,
-      color: "red",
+        marginLeft: 40,
+        color: "red",
     },
 })

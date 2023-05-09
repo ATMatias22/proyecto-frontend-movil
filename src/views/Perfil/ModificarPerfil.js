@@ -5,7 +5,9 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
-  Modal
+  Modal,
+  ActivityIndicator,
+  ScrollView,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Boton from "../../Componentes/Boton/Index";
@@ -22,6 +24,11 @@ import { validateEmail } from "../../Helpers/Helpers";
 import DatePicker from "react-native-modern-datepicker";
 import { getToday, getFormatedDate } from "react-native-modern-datepicker";
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from "axios";
+
+import { useEffect } from "react"; //----------------------------------------
+
 export default function ModificarPerfil({ navigation }) {
 
   const [formData, setFormData] = React.useState(defaultFormValues());
@@ -30,10 +37,11 @@ export default function ModificarPerfil({ navigation }) {
   const [errorMail, setErrorMail] = React.useState("");
   const [errorNacimiento, setErrorNacimiento] = React.useState("");
   const [errorNacionalidad, setErrorNacionalidad] = React.useState("");
-  //const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = React.useState(false)
 
 
   const [open, setOpen] = React.useState(false); //abre y cierra el modal
+  const [abrir, setAbrir] = React.useState(false);
 
   const [date, setDate] = React.useState(new Date()); //variable de date
 
@@ -46,6 +54,10 @@ export default function ModificarPerfil({ navigation }) {
     setOpen(!open);
   }
 
+  function handleOnPress2() {
+    setAbrir(!abrir);
+  }
+
   function onDateSelected(value) {
     setDate(value);
     setIsSelected(true);
@@ -55,11 +67,101 @@ export default function ModificarPerfil({ navigation }) {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
+  const [nombre, getNombre] = React.useState("");
+  const [apellido, getApellido] = React.useState("");
+  const [mail, getMail] = React.useState("");
+  const [nacimiento, getNacimiento] = React.useState("");
+  const [nacionalidad, getNacionalidad] = React.useState("");
+
+
+  const getUserData = async () => {
+
+   /* let notification = JSON.stringify({
+      name: nombre,
+      lastname: apellido,
+      nationality: nacionalidad,
+      dateOfBirth: nacimiento,
+      email: mail
+    })*/
+
+    const token = await AsyncStorage.getItem('@storage_Key');
+    let headers = {
+      headers: {
+
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    }
+
+    const peticion = await axios.get("http://192.168.0.176:8080/app_movil_sensor/api/user", headers)
+      .then(async res => {
+
+        //navigation.navigate("Perfil")
+        getNombre(res.data.name);
+        getApellido(res.data.lastname);
+        getMail(res.data.email);
+        getNacimiento(res.data.dateOfBirth);
+        getNacionalidad(res.data.nationality);
+
+      })
+      .catch(error =>
+
+        setErrorMail("Acceso denegado."),
+        setLoading(false)
+      );
+
+  }
+
+
+
+  const changeUserData = async (nombre, apellido, nacionalidad, nacimiento, mail) => {
+
+    let notification = JSON.stringify({
+      name: nombre,
+      lastname: apellido,
+      nationality: nacionalidad,
+      dateOfBirth: nacimiento,
+      email: mail
+    })
+
+    const token = await AsyncStorage.getItem('@storage_Key');
+    let headers = {
+      headers: {
+
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    }
+
+    const peticion = await axios.put("http://192.168.0.176:8080/app_movil_sensor/api/user/modify-data", notification, headers)
+      .then(async res => {
+
+
+        navigation.navigate("Perfil")
+      })
+      .catch(error =>
+
+        setErrorMail("Acceso denegado."),
+        setLoading(false)
+      );
+
+  }
+
+
+
   const modificarDatosPerfil = () => {
     if (!validateData()) {
+      setLoading(false)
       return;
     }
-    navigation.navigate("MostrarSensores");
+    //navigation.navigate("MostrarSensores");
+    // setLoading(true);
+    /* setTimeout(async () => {
+       changeUserData(formData.nombre, formData.apellido, formData.nacionalidad, "21/04/2021", formData.mail);
+     }, 3000);*/
+    handleOnPress2();
   };
 
   const validateData = () => {
@@ -87,7 +189,7 @@ export default function ModificarPerfil({ navigation }) {
       isValid = false;
     }
     if (isSelected == false) {
-      setErrorNacimiento("Debes ingresar una fecga de nacimiento")
+      setErrorNacimiento("Debes ingresar una fecha de nacimiento")
       isValid = false;
     }
     if (date >= today) {
@@ -102,175 +204,188 @@ export default function ModificarPerfil({ navigation }) {
     return isValid;
   };
 
+  useEffect(() => {
+    getUserData();
+  }, []);
+
   return (
     <View style={Styles.container}>
-      <View style={Styles.formContainer}>
-        {/*<Input
+      <ScrollView>
+        <View style={Styles.formContainer}>
+          {/*<Input
                     placeholder="Nombre original"
                     icono={
                         <FontAwesomeIcon icon={faUser} />
                     }
                 />*/}
 
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faUser} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su nombre"
-            autoCapitalize="none"
-            errorMessage={errorNombre}
-            onChange={(e) => onChange(e, "nombre")}
-            defaultValue={formData.nombre}
-          />
-        </View>
-        {errorNombre !== null ? (
-          <Text style={Styles.mensajeError}>{errorNombre}</Text>
-        ) : null}
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faUser} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su nombre"
+              autoCapitalize="none"
+              errorMessage={errorNombre}
+              onChange={(e) => onChange(e, "nombre")}
+              defaultValue={nombre}
+            />
+          </View>
+          {errorNombre !== null ? (
+            <Text style={Styles.mensajeError}>{errorNombre}</Text>
+          ) : null}
 
-        {/*<Input
+          {/*<Input
                     placeholder="Apellido original"
                     icono={
                         <FontAwesomeIcon icon={faUser} />
                     }
                 />*/}
 
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faUser} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su apellido"
-            autoCapitalize="none"
-            errorMessage={errorApellido}
-            onChange={(e) => onChange(e, "apellido")}
-            defaultValue={formData.apellido}
-          />
-        </View>
-        {errorApellido !== null ? (
-          <Text style={Styles.mensajeError}>{errorApellido}</Text>
-        ) : null}
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faUser} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su apellido"
+              autoCapitalize="none"
+              errorMessage={errorApellido}
+              onChange={(e) => onChange(e, "apellido")}
+              defaultValue={apellido}
+            />
+          </View>
+          {errorApellido !== null ? (
+            <Text style={Styles.mensajeError}>{errorApellido}</Text>
+          ) : null}
 
-        {/*<Input
+          {/*<Input
                     placeholder="Mail original"
                     icono={
                         <FontAwesomeIcon icon={faEnvelope} />
                     }
                 />*/}
 
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faEnvelope} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su mail"
-            autoCapitalize="none"
-            errorMessage={errorMail}
-            onChange={(e) => onChange(e, "mail")}
-            defaultValue={formData.mail}
-          />
-        </View>
-        {errorMail !== null ? (
-          <Text style={Styles.mensajeError}>{errorMail}</Text>
-        ) : null}
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faEnvelope} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su mail"
+              autoCapitalize="none"
+              errorMessage={errorMail}
+              onChange={(e) => onChange(e, "mail")}
+              defaultValue={mail}
+            />
+          </View>
+          {errorMail !== null ? (
+            <Text style={Styles.mensajeError}>{errorMail}</Text>
+          ) : null}
 
-        {/*<Input
-                    placeholder="Fecha de nacimiento"
-                    icono={
-                        <FontAwesomeIcon icon={faCakeCandles} />
-                    }
-                />*/}
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faCakeCandles} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese fecha"
+              editable={false}
+              errorMessage={errorNacimiento}
+              onChange={(e) => onChange(e, "nacimiento")}
+              value={date == null ? "" : date}
+              defaultValue={nacimiento}
+            />
+            <TouchableOpacity onPress={handleOnPress}>
+              <FontAwesomeIcon icon={faCalendar} style={[Styles.icono, { marginLeft: 140 }]} />
+            </TouchableOpacity>
 
-        {/*<View style={Styles.input}>
-          <FontAwesomeIcon icon={faCakeCandles} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su fecha de nacimiento"
-            autoCapitalize="none"
-            errorMessage={errorNacimiento}
-            onChange={(e) => onChange(e, "nacimiento")}
-            defaultValue={formData.nacimiento}
-          />
-        </View>
-        {errorNacimiento !== null ? (
-          <Text style={Styles.mensajeError}>{errorNacimiento}</Text>
-        ) : null}
-        */}
-        {/*<Input
-                    placeholder="Nacionalidad"
-                    icono={
-                        <FontAwesomeIcon icon={faFlag} />
-                    }
-                />*/}
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={open}
+            >
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <View style={Styles.modalView}>
+                  <DatePicker
+                    mode="calendar"
+                    onSelectedChange={date => {
+                      onDateSelected(date)
+                    }}
+                    options={{
+                      textFontSize: 13,
+                      selectedTextColor: "#fff",
+                      mainColor: "#F47228",
+                      backgroundColor: "#f1f1f1",
+                      textSecondaryColor: "#F4722B"
+                    }}
+                    style={{ borderRadius: 20 }}
+                  />
 
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faCakeCandles} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese fecha"
-            editable={false}
-            errorMessage={errorNacimiento}
-            onChange={(e) => onChange(e, "nacimiento")}
-            value={date == null ? "" : date}
-          />
-          <TouchableOpacity onPress={handleOnPress}>
-            <FontAwesomeIcon icon={faCalendar} style={[Styles.icono, {marginLeft: 140}]} />
-          </TouchableOpacity>
+                  <TouchableOpacity onPress={handleOnPress}>
+                    <Text style={{ marginTop: 10, marginBottom: -10, color: "#F4722B" }} >
+                      Cerrar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+
+          </View>
+          {errorNacimiento !== null ? (
+            <Text style={Styles.mensajeError}>{errorNacimiento}</Text>
+          ) : null}
+
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faFlag} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su nacionalidad"
+              autoCapitalize="none"
+              errorMessage={errorNacionalidad}
+              onChange={(e) => onChange(e, "nacionalidad")}
+              defaultValue={nacionalidad}
+            />
+          </View>
+          {errorNacionalidad !== null ? (
+            <Text style={Styles.mensajeError}>{errorNacionalidad}</Text>
+          ) : null}
+
+          <View style={Styles.botonModificarPerfil}>
+
+            <Boton
+              text={loading ? <ActivityIndicator color="#fff" size="large" />
+                :
+                "Modificar perfil"}
+              onPress={() => modificarDatosPerfil()}
+              //   onPress={() => navigation.navigate('MostrarSensores')}
+              type="principal"
+            />
+          </View>
 
           <Modal
             animationType="slide"
             transparent={true}
-            visible={open}
+            visible={abrir}
           >
             <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
               <View style={Styles.modalView}>
-                <DatePicker
-                  mode="calendar"
-                  onSelectedChange={date => {
-                    onDateSelected(date)
-                  }}
-                  options={{
-                    textFontSize: 13,
-                    selectedTextColor: "#fff",
-                    mainColor: "#F47228",
-                    backgroundColor: "#f1f1f1",
-                    textSecondaryColor: "#F4722B"
-                  }}
-                  style={{ borderRadius: 20 }}
-                />
 
-                <TouchableOpacity onPress={handleOnPress}>
-                  <Text style={{ marginTop: 10, marginBottom: -10, color: "#F4722B" }} >
-                    Cerrar
-                  </Text>
-                </TouchableOpacity>
+                <Text style={{ textAlign: "center", marginTop: 10 }}>¿Seguro que quiere modificar su perfil?</Text>
+
+
+                <View style={{ flexDirection: "row", marginTop: 20, }}>
+                  <View >
+                    <Boton text="Aceptar"
+                      onPress={() => changeUserData(formData.nombre, formData.apellido, formData.nacionalidad, "21/04/2021", formData.mail)}
+                      type="aceptar"
+                    />
+                  </View>
+
+                  <View >
+                    <Boton text="Cancelar"
+                      onPress={handleOnPress2}
+                      type="cancelar"
+                    />
+                  </View>
+                </View>
+
               </View>
             </View>
+
           </Modal>
 
         </View>
-        {errorNacimiento !== null ? (
-          <Text style={Styles.mensajeError}>{errorNacimiento}</Text>
-        ) : null}
-
-
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faFlag} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su nacionalidad"
-            autoCapitalize="none"
-            errorMessage={errorNacionalidad}
-            onChange={(e) => onChange(e, "nacionalidad")}
-            defaultValue={formData.nacionalidad}
-          />
-        </View>
-        {errorNacionalidad !== null ? (
-          <Text style={Styles.mensajeError}>{errorNacionalidad}</Text>
-        ) : null}
-
-        <View style={Styles.botonModificarPerfil}>
-          <View>
-            <Boton
-              text="Modificar perfil"
-              onClick={() => modificarDatosPerfil()}
-              //   onClick={() => navigation.navigate('MostrarSensores')}
-              type="principal"
-            />
-          </View>
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }

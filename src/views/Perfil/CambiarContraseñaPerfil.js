@@ -5,6 +5,7 @@ import {
   TextInput,
   StyleSheet,
   TouchableOpacity,
+  ActivityIndicator,
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Boton from "../../Componentes/Boton/Index";
@@ -12,6 +13,12 @@ import Boton from "../../Componentes/Boton/Index";
 import { faLock } from "@fortawesome/free-solid-svg-icons/faLock";
 import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import axios from "axios";
+
+import { validatePassword } from "../../Helpers/Helpers";
 
 export default function CambiarContraseñaPerfil({ navigation }) {
   const [data, setData] = React.useState({
@@ -28,39 +35,87 @@ export default function CambiarContraseñaPerfil({ navigation }) {
 
   const [formData, setFormData] = React.useState(defaultFormValues());
   const [errorPassword, setErrorPassword] = React.useState("");
-  const [errorConfirm, setErrorConfirm] = React.useState("");
-  //const [loading, setLoading] = useState(false)
+  const [errorNewPassword, setErrorNewPassword] = React.useState("");
+  const [loading, setLoading] = React.useState(false);
 
   const onChange = (e, type) => {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
+
+
+  const changePassword = async (password, newPassword) => {
+
+    let notification = JSON.stringify({
+      // email: "ignacio.balastegui@davinci.edu.ar",
+      // password: "Password123"
+      password: password,
+      newPassword: newPassword
+    })
+
+    const token = await AsyncStorage.getItem('@storage_Key');
+
+    let headers = {
+      headers: {
+
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + token
+      }
+    }
+
+    const peticion = await axios.put("http://192.168.0.176:8080/app_movil_sensor/api/user/modify-password", notification, headers)
+      .then(async res => {
+
+        //await AsyncStorage.setItem('@storage_Key', res.data.token);
+
+        navigation.navigate("MostrarSensores")
+      })
+      .catch(error =>
+        //console.log(error),
+        //console.log(token),
+        setErrorPassword("Acceso denegado."),
+        setLoading(false)
+      );
+
+  }
+
+
+
   const cambiarContraseñaPerfil = () => {
     if (!validateData()) {
+      setLoading(false);
       return;
     }
-    navigation.navigate("MostrarSensores");
+    //navigation.navigate("MostrarSensores");
+    setLoading(true);
+    setTimeout(async () => {
+      changePassword(formData.password, formData.newPassword);
+    }, 3000);
   };
 
   const validateData = () => {
-    setErrorConfirm("");
+    setErrorNewPassword("");
     setErrorPassword("");
     let isValid = true;
 
-    if ((formData.password !== "hola123") & (formData.password !== "")) {
+    /*if ((formData.password !== "hola123") & (formData.password !== "")) {
       setErrorPassword("Contraseña incorrecta.");
       isValid = false;
-    }
+    }*/
+
     if (formData.password == "") {
-      setErrorPassword("Debes ingresar una contrasseña.");
+      setErrorPassword("Debe ingresar la antigua contrasseña.");
       isValid = false;
     }
-    if (formData.confirm !== formData.password) {
-      setErrorConfirm("Las contraseñas no son iguales.");
+
+    if (formData.newPassword == "") {
+      setErrorNewPassword("Debe ingresar una nueva contraseña.");
       isValid = false;
     }
-    if (formData.confirm == "") {
-      setErrorConfirm("Debes volver a ingresar la contraseña.");
+
+    if (!validatePassword(formData.newPassword) & formData.newPassword !== "") {
+      setErrorNewPassword("Contraseña invalida." + "\n" + "Debe tener al menos 8 coracteres, 1 mayuscula y 1 numero.");
       isValid = false;
     }
 
@@ -85,7 +140,7 @@ export default function CambiarContraseñaPerfil({ navigation }) {
             ) : (
               <FontAwesomeIcon
                 icon={faEye}
-                style={{ marginLeft: 80, marginTop: 5, marginRight: 5 }}
+                style={[Styles.iconoOjo, { marginLeft: 57 }]}
               />
             )}
           </TouchableOpacity>
@@ -99,33 +154,35 @@ export default function CambiarContraseñaPerfil({ navigation }) {
           <TextInput
             placeholder="Ingresar nueva contraseña"
             secureTextEntry={data.secureTextEntry ? true : false}
-            errorMessage={errorConfirm}
-            onChange={(e) => onChange(e, "confirm")}
-            defaultValue={formData.confirm}
+            errorMessage={errorNewPassword}
+            onChange={(e) => onChange(e, "newPassword")}
+            defaultValue={formData.newPassword}
           />
           <TouchableOpacity onPress={updateSecureTextEntry}>
             {data.secureTextEntry ? (
               <FontAwesomeIcon
                 icon={faEyeSlash}
-                style={{ marginRight: 5, marginTop: 5, marginLeft: 10 }}
+                style={[Styles.iconoOjo, { marginLeft: 7 }]}
               />
             ) : (
               <FontAwesomeIcon
                 icon={faEye}
-                style={{ marginRight: 5, marginTop: 5, marginLeft: 100 }}
+                style={[Styles.iconoOjo, { marginLeft: 57 }]}
               />
             )}
           </TouchableOpacity>
         </View>
-        {errorConfirm !== null ? (
-          <Text style={Styles.mensajeError}>{errorConfirm}</Text>
+        {errorNewPassword !== null ? (
+          <Text style={Styles.mensajeError}>{errorNewPassword}</Text>
         ) : null}
 
         <View style={Styles.botonCambiarCont}>
           <Boton
-            text="Cambiar contraseña"
-            onClick={() => cambiarContraseñaPerfil()}
-            //onClick={() => navigation.navigate('InfoDispositivo')}
+            text={loading ? <ActivityIndicator color="#fff" size="large" />
+              :
+              "Cambiar contraseña"}
+            onPress={() => cambiarContraseñaPerfil()}
+            //onPress={() => navigation.navigate('InfoDispositivo')}
             type="principal"
           />
         </View>
@@ -135,7 +192,7 @@ export default function CambiarContraseñaPerfil({ navigation }) {
 }
 
 const defaultFormValues = () => {
-  return { password: "", confirm: "" };
+  return { password: "", newPassword: "" };
 };
 
 const Styles = StyleSheet.create({
@@ -170,9 +227,10 @@ const Styles = StyleSheet.create({
     marginTop: 5,
   },
   iconoOjo: {
-    marginRight: 5,
-    marginTop: 5,
-    marginLeft: 0,
+    alignSelf: "flex-end",
+    marginLeft: "auto",
+    marginTop: 7,
+
   },
   botonCambiarCont: {
     marginLeft: 60,

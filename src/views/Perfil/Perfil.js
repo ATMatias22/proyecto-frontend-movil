@@ -6,6 +6,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Image,
+  ScrollView
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons/faArrowRight";
@@ -16,87 +17,83 @@ import { Text as TextoDripsy } from "dripsy";
 export default function Perfil({ navigation }) {
   return (
     <View style={Styles.container}>
-      <View style={Styles.logo}>
-        <Image source={require("../../img/sensor3.png")} />
-      </View>
+      <ScrollView>
+        <View style={Styles.logo}>
+          <Image source={require("../../img/sensor3.png")} />
+        </View>
 
-      <View style={{ marginTop: 30 }}>
-        <View style={Styles.opcionesLetra}>
-          <TouchableOpacity
-            style={{ flexDirection: "row" }}
-            onPress={() => navigation.navigate("ModificarPerfil")}
-          >
-            {/*<Text>Cambiar datos</Text>*/}
+        <View style={{ marginTop: 30 }}>
 
-            <TextoDripsy
-              sx={{
-                fontSize: [14, 16, 18],
-              }}
+          <View style={Styles.opcionesLetra}>
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={() => navigation.navigate("ModificarPerfil")}
             >
-              Cambiar datos
-            </TextoDripsy>
+              {/*<Text>Cambiar datos</Text>*/}
 
-            <FontAwesomeIcon icon={faArrowRight} style={Styles.icono} />
-          </TouchableOpacity>
-        </View>
+              <TextoDripsy
+                sx={Styles.texto}
+              >
+                Cambiar datos
+              </TextoDripsy>
 
-        <View style={Styles.opcionesLetra}>
-          <TouchableOpacity
-            style={{ flexDirection: "row" }}
-            onPress={() => navigation.navigate("CambiarContraseñaPerfil")}
-          >
-            {/*<Text>Cambiar contraseña</Text>*/}
+              <FontAwesomeIcon icon={faArrowRight} style={Styles.icono} />
+            </TouchableOpacity>
+          </View>
 
-            <TextoDripsy
-              sx={{
-                fontSize: [14, 16, 18],
-              }}
+          <View style={Styles.opcionesLetra}>
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={() => navigation.navigate("CambiarContraseñaPerfil")}
             >
-              Cambiar contraseña
-            </TextoDripsy>
+              {/*<Text>Cambiar contraseña</Text>*/}
 
-            <FontAwesomeIcon
-              icon={faArrowRight}
-              style={{ /*Styles.icono*/ paddingLeft: 280 }}
-            />
-          </TouchableOpacity>
-        </View>
+              <TextoDripsy
+                sx={Styles.texto}
+              >
+                Cambiar contraseña
+              </TextoDripsy>
 
-        <View style={Styles.opcionesLetra}>
-          <TouchableOpacity
-            style={{ flexDirection: "row" }}
-            onPress={() => navigation.navigate("CambiarTema")}
-          >
-            {/*<Text>Cambiar tema</Text>*/}
+              <FontAwesomeIcon
+                icon={faArrowRight}
+                style={Styles.icono}
+              />
+            </TouchableOpacity>
+          </View>
 
-            <TextoDripsy
-              sx={{
-                fontSize: [14, 16, 18],
-                //color: "white",
-              }}
+          <View style={Styles.opcionesLetra}>
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={() => navigation.navigate("CambiarTema")}
             >
-              Cambiar tema
-            </TextoDripsy>
+              {/*<Text>Cambiar tema</Text>*/}
 
-            <FontAwesomeIcon icon={faArrowRight} style={Styles.icono} />
-          </TouchableOpacity>
+              <TextoDripsy
+                sx={Styles.texto}
+              >
+                Cambiar tema
+              </TextoDripsy>
+
+              <FontAwesomeIcon icon={faArrowRight} style={Styles.icono} />
+            </TouchableOpacity>
+          </View>
+
+          <View style={Styles.opcionesLetra}>
+            <TouchableOpacity
+              style={{ flexDirection: "row" }}
+              onPress={() => navigation.navigate("EliminarPerfil")}
+            >
+              {/*<Text>Eliminar perfil</Text>*/}
+
+              <TextoDripsy sx={Styles.texto}>
+                Eliminar perfil
+              </TextoDripsy>
+
+              <FontAwesomeIcon icon={faTrash} style={Styles.icono} />
+            </TouchableOpacity>
+          </View>
         </View>
-
-        <View style={Styles.opcionesLetra}>
-          <TouchableOpacity
-            style={{ flexDirection: "row" }}
-            onPress={() => navigation.navigate("CambiarRedWifi")}
-          >
-            {/*<Text>Eliminar perfil</Text>*/}
-
-            <TextoDripsy sx={{ fontSize: [14, 16, 18] }}>
-              Eliminar perfil
-            </TextoDripsy>
-
-            <FontAwesomeIcon icon={faTrash} style={Styles.icono} />
-          </TouchableOpacity>
-        </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -131,13 +128,15 @@ const Styles = StyleSheet.create({
     borderRadius: 30,
   },
   icono: {
-    marginRight: 5,
-    marginTop: 5,
-    marginLeft: 180,
+    //marginRight: 5,
+    // marginTop: 5,
+    // marginLeft: 180,
+    alignSelf: "flex-end",
+    marginLeft: "auto"
   },
   texto: {
     fontWeight: "bold",
-    fontSize: 14,
-    paddingLeft: 14,
+    fontSize: [14, 16, 18],
+    color: "#fff"
   },
 });

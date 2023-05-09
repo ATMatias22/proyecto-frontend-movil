@@ -1,4 +1,5 @@
 import * as React from "react";
+
 import {
   View,
   Text,
@@ -8,6 +9,8 @@ import {
   styles,
   TouchableOpacity,
   Image,
+  ActivityIndicator,
+  ScrollView
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Boton from "../../Componentes/Boton/Index";
@@ -21,6 +24,11 @@ import { faEyeSlash } from "@fortawesome/free-solid-svg-icons/faEyeSlash";
 import { faEye } from "@fortawesome/free-solid-svg-icons/faEye";
 
 import { validateEmail } from "../../Helpers/Helpers";
+
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import axios from "axios";
+
 
 export default function Login({ navigation }) {
   const [data, setData] = React.useState({
@@ -39,17 +47,56 @@ export default function Login({ navigation }) {
   const [formData, setFormData] = React.useState(defaultFormValues());
   const [errorEmail, setErrorEmail] = React.useState("");
   const [errorPassword, setErrorPassword] = React.useState("");
-  //const [loading, setLoading] = useState(false)
+
+
+  const [loading, setLoading] = React.useState(false);
 
   const onChange = (e, type) => {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
+  const getTokenUsuario = async (mail, contraseña) => {
+
+    let notification = JSON.stringify({
+      // email: "ignacio.balastegui@davinci.edu.ar",
+      // password: "Password123"
+      email: mail,
+      password: contraseña
+    })
+
+    let headers = {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const peticion = await axios.post("http://192.168.0.176:8080/app_movil_sensor/api/auth/login", notification, headers)
+      .then(async res => {
+        //console.log(res.data.token)
+        await AsyncStorage.setItem('@storage_Key', res.data.token);
+        // const prueba=  await AsyncStorage.getItem('@storage_Key');
+        // console.log(prueba);
+        navigation.navigate("MostrarSensores")
+      })
+      .catch(error =>
+        console.log(error),
+        setErrorEmail("Mail o contraseña incorrectos."),
+        setLoading(false)
+      );
+
+  }
+
   const loginUser = () => {
     if (!validateData()) {
+      setLoading(false);
       return;
     }
-    navigation.navigate("MostrarSensores");
+    setLoading(true);
+    setTimeout(async () => {
+      getTokenUsuario(formData.email, formData.password);
+    }, 3000);
+    // navigation.navigate("MostrarSensores");
   };
 
   const validateData = () => {
@@ -65,132 +112,120 @@ export default function Login({ navigation }) {
       setErrorEmail("Debe ingresar un email.");
       isValid = false;
     }
-    if (
-      (formData.email !== "ignacio@hola.com") &
-      validateEmail(formData.email)
-    ) {
-      setErrorEmail("Email incorrecto.");
-      isValid = false;
-    }
+    /* if (
+       (formData.email !== "ignacio@hola.com") &
+       validateEmail(formData.email)
+     ) {
+       setErrorEmail("Email incorrecto.");
+       isValid = false;
+     }*/
     if (formData.password == "") {
       setErrorPassword("Debe ingresar una contraseña.");
       isValid = false;
     }
-    if ((formData.password !== "123456") & (formData.password !== "")) {
+    /*if ((formData.password !== "123456") & (formData.password !== "")) {
       setErrorPassword("Contraseña incorrecta.");
       isValid = false;
-    }
+    }*/
 
     return isValid;
   };
 
+
   return (
     <View style={Styles.container}>
-      <View style={Styles.logo}>
-        {/*<TextoDripsy sx={{
-          fontSize: [0, 1, 2],
-        }}>el logo</TextoDripsy>*/}
-        <Image source={require("../../img/sensor3.png")} />
-      </View>
+      <ScrollView>
+        <View style={Styles.logo}>
+          <Image source={require("../../img/sensor3.png")} />
+        </View>
 
-      <View style={Styles.loginContainer}>
-        {
-          //-----------------------------------------
-          //  por alguna razon hecho con el componente no funciona la validacion pero normal si
-          /*  <Input
+        <View style={Styles.loginContainer}>
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faUser} style={Styles.icono} />
+            <TextInput
               placeholder="Ingrese su mail"
-              icono={
-                <FontAwesomeIcon icon={faUser} />
-              }
+              autoCapitalize="none"
               errorMessage={errorEmail}
               onChange={(e) => onChange(e, "email")}
               defaultValue={formData.email}
-    
             />
-            */
-          //----------------------------------------------
-        }
+          </View>
+          {errorEmail !== null ? (
+            <Text style={Styles.mensajeError}>{errorEmail}</Text>
+          ) : null}
 
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faUser} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su mail"
-            autoCapitalize="none"
-            errorMessage={errorEmail}
-            onChange={(e) => onChange(e, "email")}
-            defaultValue={formData.email}
-          />
-        </View>
-        {errorEmail !== null ? (
-          <Text style={Styles.mensajeError}>{errorEmail}</Text>
-        ) : null}
-
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faLock} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su contraseña"
-            autoCapitalize="none"
-            secureTextEntry={data.secureTextEntry ? true : false}
-            errorMessage={errorPassword}
-            onChange={(e) => onChange(e, "password")}
-            defaultValue={formData.password}
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faLock} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su contraseña"
+              autoCapitalize="none"
+              secureTextEntry={data.secureTextEntry ? true : false}
+              errorMessage={errorPassword}
+              onChange={(e) => onChange(e, "password")}
+              defaultValue={formData.password}
             // value={form.contraseña}
-          />
-
-          <TouchableOpacity onPress={updateSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <FontAwesomeIcon
-                icon={faEyeSlash}
-                style={{ marginLeft: 10, marginTop: 5, marginRight: 5 }}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faEye}
-                style={{ marginLeft: 50, marginTop: 5, marginRight: 5 }}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        {errorPassword !== null ? (
-          <Text style={Styles.mensajeError}>{errorPassword}</Text>
-        ) : null}
-
-        <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
-          <View>
-            <Boton
-              text="ingresar"
-              //onClick={() => loginUser()}
-              onClick={() => navigation.navigate("MostrarSensores")}
-              type="principal"
             />
-          </View>
 
-          <View
-            style={{
-              marginTop: 20,
-              fontWeight: "bold",
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Text style={Styles.texto}>¿No se ha registrado?</Text>
-
-            <TouchableOpacity onPress={() => navigation.navigate("Register")}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 12,
-                  paddingLeft: 20,
-                  color: "#FF8800",
-                  textShadowRadius: 3,
-                }}
-              >
-                Registrarse
-              </Text>
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ?
+                <FontAwesomeIcon
+                  icon={faEyeSlash}
+                  style={[Styles.iconoOjo, { marginTop: 7 }]}
+                />
+                :
+                <FontAwesomeIcon
+                  icon={faEye}
+                  style={[Styles.iconoOjo, { marginTop: 7, marginLeft: 48 }]}
+                />
+              }
             </TouchableOpacity>
+
+
+          </View>
+          {errorPassword !== null ? (
+            <Text style={Styles.mensajeError}>{errorPassword}</Text>
+          ) : null}
+
+          <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
+            <View>
+              <Boton
+                text={loading ? <ActivityIndicator color="#fff" size="large" />
+                  :
+                  "Ingresar"}
+                onPress={() => loginUser()}
+                //onClick={() => navigation.navigate("MostrarSensores")}
+                type="principal"
+              />
+            </View>
+
+            <View
+              style={{
+                marginTop: 20,
+                fontWeight: "bold",
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={Styles.texto}>¿No se ha registrado?</Text>
+
+              <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 12,
+                    paddingLeft: 20,
+                    color: "#FF8800",
+                    textShadowRadius: 3,
+                  }}
+                >
+                  Registrarse
+                </Text>
+              </TouchableOpacity>
+            </View>
           </View>
         </View>
-      </View>
+      </ScrollView>
     </View>
   );
 }
@@ -238,13 +273,17 @@ const Styles = StyleSheet.create({
     marginTop: 5,
   },
   iconoOjo: {
-    marginRight: 5,
-    marginTop: 10,
-    marginLeft: 32,
+    alignSelf: "flex-end",
+    marginLeft: "auto",
+    marginLeft: 5
   },
   texto: {
     fontWeight: "bold",
     fontSize: 10,
     paddingLeft: 10,
+  },
+  mensajeError: {
+    marginLeft: 40,
+    color: "red",
   },
 });

@@ -7,7 +7,8 @@ import {
   TouchableOpacity,
   Image,
   Modal,
-  ScrollView
+  ScrollView,
+  ActivityIndicator
 } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 import Boton from "../../Componentes/Boton/Index";
@@ -26,9 +27,13 @@ import { faFlag } from "@fortawesome/free-solid-svg-icons/faFlag";
 import { faCalendar } from "@fortawesome/free-solid-svg-icons/faCalendar"
 
 import { validateEmail } from "../../Helpers/Helpers";
+import { validatePassword } from "../../Helpers/Helpers";
 
 import DatePicker from "react-native-modern-datepicker";
 import { getToday, getFormatedDate } from "react-native-modern-datepicker";
+
+
+import axios from "axios";
 
 export default function Register({ navigation }) {
   const [data, setData] = React.useState({
@@ -62,6 +67,7 @@ export default function Register({ navigation }) {
 
   const [isSelected, setIsSelected] = React.useState(false);
 
+  const [loading, setLoading] = React.useState(false);
 
   function handleOnPress() {
     setOpen(!open);
@@ -78,10 +84,56 @@ export default function Register({ navigation }) {
 
   const registerUser = () => {
     if (!validateData()) {
+      setLoading(false);
       return;
     }
-    navigation.navigate("MostrarSensores");
+    setLoading(true);
+    setTimeout(async () => {
+      registrarUsuario(formData.nombre, formData.apellido, formData.email, formData.password, "21/04/2021", formData.nacionalidad);
+    }, 3000);
+
+
   };
+
+  //---------------------------------------------------------------------------------------------------------
+  const registrarUsuario = async (nombre, apellido, mail, contraseña, nacimiento, nacion) => {
+
+    let notification = JSON.stringify({
+      /* name: "Matias",
+       lastname: "Apellido",
+       email: "algo@hotmail.com",
+       password: "Password123",
+       dateOfBirth: "04/04/2004",
+       nationality: "Argentina"*/
+      name: nombre,
+      lastname: apellido,
+      email: mail,
+      password: contraseña,
+      dateOfBirth: nacimiento,
+      nationality: nacion
+    })
+
+    let headers = {
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      }
+    }
+
+    const peticion = await axios.post("http://192.168.0.176:8080/app_movil_sensor/api/auth/register", notification, headers)
+      .then(res => {
+
+        navigation.navigate("PantallaCodigo", { mail: formData.email })
+      })
+      .catch(error =>
+
+        setErrorEmail("El mail ya existe."),
+        setLoading(false)
+      );
+  }
+
+  //---------------------------------------------------------------------------------------------------------
+
 
   const validateData = () => {
     setErrorNombre("");
@@ -109,19 +161,14 @@ export default function Register({ navigation }) {
       setErrorEmail("Debe ingresar un email.");
       isValid = false;
     }
-    if (
-      (formData.email !== "ignacio@hola.com") &
-      validateEmail(formData.email)
-    ) {
-      setErrorEmail("Email incorrecto.");
-      isValid = false;
-    }
+
+
     if (isSelected == false) {
-      setErrorNacimiento("Debes ingresar una fecga de nacimiento")
+      setErrorNacimiento("Debes ingresar una fecha de nacimiento.")
       isValid = false;
     }
     if (date >= today) {
-      setErrorNacimiento("Debes ingresar una fecha de nacimiento valida")
+      setErrorNacimiento("Debes ingresar una fecha de nacimiento valida.")
       isValid = false;
     }
     if (formData.nacionalidad == "") {
@@ -132,10 +179,13 @@ export default function Register({ navigation }) {
       setErrorPassword("Debe ingresar una contraseña.");
       isValid = false;
     }
-    if ((formData.password !== "123456") & (formData.password !== "")) {
-      setErrorPassword("Contraseña incorrecta.");
+
+
+    if (!validatePassword(formData.password) & formData.password !== "") {
+      setErrorPassword("Debe ingresar una contraseña valida." + "\n" + "Debe tener al menos 8 coracteres, 1 mayuscula y 1 numero.");
       isValid = false;
     }
+
     if ((formData.confirm !== formData.password) & (formData.confirm !== "")) {
       setErrorConfirm("La confirmacion no coincide.");
       isValid = false;
@@ -151,219 +201,221 @@ export default function Register({ navigation }) {
   return (
     <View style={Styles.container}>
       <ScrollView>
-      {<View style={Styles.logo}>
-        <Image source={require("../../img/sensor3.png")} />
-  </View>}
+        {<View style={Styles.logo}>
+          <Image source={require("../../img/sensor3.png")} />
+        </View>}
 
-      <View style={Styles.registerContainer}>
-        {/*comando para hacer que la pantalla
+        <View style={Styles.registerContainer}>
+          {/*comando para hacer que la pantalla
          suba cuando escribo en el teclado*/}
 
-        {/*<Input
+          {/*<Input
           placeholder="Ingrese su mail"
           icono={
             <FontAwesomeIcon icon={faUser} />
           }
         />*/}
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faUser} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su nombre"
-            autoCapitalize="none"
-            errorMessage={errorNombre}
-            onChange={(e) => onChange(e, "nombre")}
-            defaultValue={formData.nombre}
-          />
-        </View>
-
-        {errorNombre !== null ? (
-          <Text style={Styles.mensajeError}>{errorNombre}</Text>
-        ) : null}
-
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faUser} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su apellido"
-            autoCapitalize="none"
-            errorMessage={errorApellido}
-            onChange={(e) => onChange(e, "apellido")}
-            defaultValue={formData.apellido}
-          />
-        </View>
-
-        {errorApellido !== null ? (
-          <Text style={Styles.mensajeError}>{errorApellido}</Text>
-        ) : null}
-
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faEnvelope} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su mail"
-            autoCapitalize="none"
-            errorMessage={errorEmail}
-            onChange={(e) => onChange(e, "email")}
-            defaultValue={formData.email}
-          />
-        </View>
-
-        {errorEmail !== null ? (
-          <Text style={Styles.mensajeError}>{errorEmail}</Text>
-        ) : null}
-
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faCakeCandles} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese fecha"
-            editable={false}
-            errorMessage={errorNacimiento}
-            onChange={(e) => onChange(e, "nacimiento")}
-            value={date == null ? "" : date}
-          />
-          <TouchableOpacity onPress={handleOnPress}>
-            <FontAwesomeIcon icon={faCalendar} style={[Styles.icono, { marginLeft: 140 }]} />
-          </TouchableOpacity>
-
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={open}
-          >
-            <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
-              <View style={Styles.modalView}>
-                <DatePicker
-                  mode="calendar"
-                  onSelectedChange={date => {
-                    onDateSelected(date)
-                  }}
-                  options={{
-                    textFontSize: 13,
-                    selectedTextColor: "#fff",
-                    mainColor: "#F47228",
-                    backgroundColor: "#f1f1f1",
-                    textSecondaryColor: "#F4722B"
-                  }}
-                  style={{ borderRadius: 20 }}
-                />
-
-                <TouchableOpacity onPress={handleOnPress}>
-                  <Text style={{ marginTop: 10, marginBottom: -10, color: "#F4722B" }} >
-                    Cerrar
-                  </Text>
-                </TouchableOpacity>
-              </View>
-            </View>
-          </Modal>
-
-        </View>
-        {errorNacimiento !== null ? (
-          <Text style={Styles.mensajeError}>{errorNacimiento}</Text>
-        ) : null}
-
-         <View style={Styles.input}>
-          <FontAwesomeIcon icon={faFlag} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su nacionalidad"
-            autoCapitalize="none"
-            errorMessage={errorNacionalidad}
-            onChange={(e) => onChange(e, "nacionalidad")}
-            defaultValue={formData.nacionalidad}
-          />
-        </View>
-
-        {errorNacionalidad !== null ? (
-          <Text style={Styles.mensajeError}>{errorNacionalidad}</Text>
-        ) : null}
-        
-
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faLock} style={Styles.icono} />
-          <TextInput
-            placeholder="Ingrese su contraseña"
-            secureTextEntry={data.secureTextEntry ? true : false}
-            autoCapitalize="none"
-            errorMessage={errorPassword}
-            onChange={(e) => onChange(e, "password")}
-            defaultValue={formData.password}
-          />
-          <TouchableOpacity onPress={updateSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <FontAwesomeIcon
-                icon={faEyeSlash}
-                style={{ marginLeft: 20, marginTop: 5, marginRight: 10 }}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faEye}
-                style={{ marginLeft: 80, marginTop: 5, marginRight: 10 }}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        {errorPassword !== null ? (
-          <Text style={Styles.mensajeError}>{errorPassword}</Text>
-        ) : null}
-
-        <View style={Styles.input}>
-          <FontAwesomeIcon icon={faLock} style={Styles.icono} />
-          <TextInput
-            placeholder="Su contraseña de nuevo"
-            secureTextEntry={data.secureTextEntry ? true : false}
-            autoCapitalize="none"
-            errorMessage={errorConfirm}
-            onChange={(e) => onChange(e, "confirm")}
-            defaultValue={formData.confirm}
-          />
-          <TouchableOpacity onPress={updateSecureTextEntry}>
-            {data.secureTextEntry ? (
-              <FontAwesomeIcon
-                icon={faEyeSlash}
-                style={{ marginLeft: 10, marginTop: 5, marginRight: 10 }}
-              />
-            ) : (
-              <FontAwesomeIcon
-                icon={faEye}
-                style={{ marginLeft: 50, marginTop: 5, marginRight: 10 }}
-              />
-            )}
-          </TouchableOpacity>
-        </View>
-        {errorPassword !== null ? (
-          <Text style={Styles.mensajeError}>{errorConfirm}</Text>
-        ) : null}
-
-        <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
-          <View>
-            <Boton
-              text="Registrarse"
-              onClick={() => registerUser()}
-              //onClick={() => navigation.navigate('MostrarSensores')}
-              type="principal"
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faUser} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su nombre"
+              autoCapitalize="none"
+              errorMessage={errorNombre}
+              onChange={(e) => onChange(e, "nombre")}
+              defaultValue={formData.nombre}
             />
           </View>
 
-          <View
-            style={{
-              marginTop: 30,
-              alignItems: "center",
-              flexDirection: "row",
-            }}
-          >
-            <Text style={Styles.texto}>¿Ya tiene una cuenta?</Text>
-            <TouchableOpacity onPress={() => navigation.navigate("Login")}>
-              <Text
-                style={{
-                  fontWeight: "bold",
-                  fontSize: 10,
-                  paddingLeft: 20,
-                  color: "orangered",
-                }}
-              >
-                Ingresar
-              </Text>
+          {errorNombre !== null ? (
+            <Text style={Styles.mensajeError}>{errorNombre}</Text>
+          ) : null}
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faUser} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su apellido"
+              autoCapitalize="none"
+              errorMessage={errorApellido}
+              onChange={(e) => onChange(e, "apellido")}
+              defaultValue={formData.apellido}
+            />
+          </View>
+
+          {errorApellido !== null ? (
+            <Text style={Styles.mensajeError}>{errorApellido}</Text>
+          ) : null}
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faEnvelope} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su mail"
+              autoCapitalize="none"
+              errorMessage={errorEmail}
+              onChange={(e) => onChange(e, "email")}
+              defaultValue={formData.email}
+            />
+          </View>
+
+          {errorEmail !== null ? (
+            <Text style={Styles.mensajeError}>{errorEmail}</Text>
+          ) : null}
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faCakeCandles} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese fecha"
+              editable={false}
+              errorMessage={errorNacimiento}
+              onChange={(e) => onChange(e, "nacimiento")}
+              value={date == null ? "" : date}
+            />
+            <TouchableOpacity onPress={handleOnPress}>
+              <FontAwesomeIcon icon={faCalendar} style={[Styles.icono, { marginLeft: 140 }]} />
+            </TouchableOpacity>
+
+            <Modal
+              animationType="slide"
+              transparent={true}
+              visible={open}
+            >
+              <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+                <View style={Styles.modalView}>
+                  <DatePicker
+                    mode="calendar"
+                    onSelectedChange={date => {
+                      onDateSelected(date)
+                    }}
+                    options={{
+                      textFontSize: 13,
+                      selectedTextColor: "#fff",
+                      mainColor: "#F47228",
+                      backgroundColor: "#f1f1f1",
+                      textSecondaryColor: "#F4722B"
+                    }}
+                    style={{ borderRadius: 20 }}
+                  />
+
+                  <TouchableOpacity onPress={handleOnPress}>
+                    <Text style={{ marginTop: 10, marginBottom: -10, color: "#F4722B" }} >
+                      Cerrar
+                    </Text>
+                  </TouchableOpacity>
+                </View>
+              </View>
+            </Modal>
+
+          </View>
+          {errorNacimiento !== null ? (
+            <Text style={Styles.mensajeError}>{errorNacimiento}</Text>
+          ) : null}
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faFlag} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su nacionalidad"
+              autoCapitalize="none"
+              errorMessage={errorNacionalidad}
+              onChange={(e) => onChange(e, "nacionalidad")}
+              defaultValue={formData.nacionalidad}
+            />
+          </View>
+
+          {errorNacionalidad !== null ? (
+            <Text style={Styles.mensajeError}>{errorNacionalidad}</Text>
+          ) : null}
+
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faLock} style={Styles.icono} />
+            <TextInput
+              placeholder="Ingrese su contraseña"
+              secureTextEntry={data.secureTextEntry ? true : false}
+              autoCapitalize="none"
+              errorMessage={errorPassword}
+              onChange={(e) => onChange(e, "password")}
+              defaultValue={formData.password}
+            />
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <FontAwesomeIcon
+                  icon={faEyeSlash}
+                  style={{ marginLeft: 20, marginTop: 5, marginRight: 10 }}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faEye}
+                  style={{ marginLeft: 80, marginTop: 5, marginRight: 10 }}
+                />
+              )}
             </TouchableOpacity>
           </View>
+          {errorPassword !== null ? (
+            <Text style={Styles.mensajeError}>{errorPassword}</Text>
+          ) : null}
+
+          <View style={Styles.input}>
+            <FontAwesomeIcon icon={faLock} style={Styles.icono} />
+            <TextInput
+              placeholder="Su contraseña de nuevo"
+              secureTextEntry={data.secureTextEntry ? true : false}
+              autoCapitalize="none"
+              errorMessage={errorConfirm}
+              onChange={(e) => onChange(e, "confirm")}
+              defaultValue={formData.confirm}
+            />
+            <TouchableOpacity onPress={updateSecureTextEntry}>
+              {data.secureTextEntry ? (
+                <FontAwesomeIcon
+                  icon={faEyeSlash}
+                  style={{ marginLeft: 10, marginTop: 5, marginRight: 10 }}
+                />
+              ) : (
+                <FontAwesomeIcon
+                  icon={faEye}
+                  style={{ marginLeft: 50, marginTop: 5, marginRight: 10 }}
+                />
+              )}
+            </TouchableOpacity>
+          </View>
+          {errorPassword !== null ? (
+            <Text style={Styles.mensajeError}>{errorConfirm}</Text>
+          ) : null}
+
+          <View style={{ marginLeft: 60, marginRight: 60, marginTop: 30 }}>
+            <View>
+              <Boton
+                text={loading ? <ActivityIndicator color="#fff" size="large" />
+                  :
+                  "Registrarse"}
+                onPress={() => registerUser()}
+                //onClick={() => navigation.navigate("PantallaCodigo")}
+                type="principal"
+              />
+            </View>
+
+            <View
+              style={{
+                marginTop: 30,
+                alignItems: "center",
+                flexDirection: "row",
+              }}
+            >
+              <Text style={Styles.texto}>¿Ya tiene una cuenta?</Text>
+              <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+                <Text
+                  style={{
+                    fontWeight: "bold",
+                    fontSize: 10,
+                    paddingLeft: 20,
+                    color: "orangered",
+                  }}
+                >
+                  Ingresar
+                </Text>
+              </TouchableOpacity>
+            </View>
+          </View>
         </View>
-      </View>
       </ScrollView>
     </View>
   );
@@ -383,11 +435,12 @@ const Styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     marginBottom: 30,
-    marginTop: 20,
+    marginTop: 40,
   },
   registerContainer: {
     marginLeft: 17,
     marginRight: 17,
+    marginBottom: 20,
     padding: 10,
     backgroundColor: "withe",
     borderRadius: 30,

@@ -8,6 +8,10 @@ import { faLock } from '@fortawesome/free-solid-svg-icons/faLock'
 import { faEyeSlash } from '@fortawesome/free-solid-svg-icons/faEyeSlash'
 import { faEye } from '@fortawesome/free-solid-svg-icons/faEye'
 
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
+import axios from "axios";
+
 
 export default function AgregarDispositivo({ navigation }) {
 
@@ -36,7 +40,8 @@ export default function AgregarDispositivo({ navigation }) {
         if (!validateData()) {
             return;
         }
-        navigation.navigate('MostrarSensores')
+        // navigation.navigate('MostrarSensores')
+        addDisp(formData.code, formData.password)
     }
 
 
@@ -45,13 +50,9 @@ export default function AgregarDispositivo({ navigation }) {
         setErrorPassword("")
         let isValid = true
 
-        if (formData.code !== "coddisp1" & formData.code !== "") {
-            setErrorCode("Debes ingresar un codigo valido.")
-            isValid = false
-            console.log("codigo mal")
-        }
 
-        if (formData.code == "" ) {
+
+        if (formData.code == "") {
             setErrorCode("Debes ingresar un codigo.")
             isValid = false
             // console.log("codigo mal")
@@ -63,14 +64,47 @@ export default function AgregarDispositivo({ navigation }) {
             // console.log("contraseña mal")
         }
 
-        if (formData.password !== "222222" & formData.password !=="") {
+        /*if (formData.password !== "222222" & formData.password !=="") {
             setErrorPassword("Contraseña incorrecta.")
             isValid = false
             // console.log("contraseña mal")
-        }
+        }*/
 
         return isValid
     }
+
+    const addDisp = async (code, password) => {
+
+        let notification = JSON.stringify({
+            code: code,
+            password: password
+        })
+
+        const token = await AsyncStorage.getItem('@storage_Key');
+
+        let headers = {
+            headers: {
+
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + token
+            }
+        }
+
+        const peticion = await axios.put("http://192.168.0.176:8080/app_movil_sensor/api/device/link-user", notification, headers)
+            .then(async res => {
+
+                navigation.navigate("MostrarSensores")
+            })
+            .catch(error =>
+
+                console.log(error),
+                setErrorCode("Accceso denegado.")
+                // setLoading(false)
+            );
+
+    }
+
     return (
         <View style={Styles.container} >
 
@@ -107,7 +141,7 @@ export default function AgregarDispositivo({ navigation }) {
                         {data.secureTextEntry ?
                             <FontAwesomeIcon icon={faEyeSlash} style={Styles.iconoOjo} />
                             :
-                            <FontAwesomeIcon icon={faEye} style={{ marginLeft: 120, marginTop: 5, marginRight: 5 }} />
+                            <FontAwesomeIcon icon={faEye} style={[Styles.iconoOjo, { marginLeft: 100 }]} />
                         }
                     </TouchableOpacity>
                 </View>
@@ -120,8 +154,8 @@ export default function AgregarDispositivo({ navigation }) {
                 <View style={Styles.botonAgregarDisp}>
                     <View>
                         <Boton text="Agregar dispositivo"
-                            onClick={() => agregarDisp()}
-                            // onClick={() => navigation.navigate('MostrarSensores')} 
+                            onPress={() => agregarDisp()}
+                            // onPress={() => navigation.navigate('MostrarSensores')} 
                             type="principal" />
                     </View>
                 </View>
@@ -148,12 +182,12 @@ const Styles = StyleSheet.create({
         marginRight: 17,
         padding: 5,
         backgroundColor: "white",
-        borderRadius:30,
+        borderRadius: 30,
         borderWidth: 3,
         borderColor: "#FF8800",
 
-       
-        
+
+
     },
     input: {
         marginBottom: 10,
@@ -167,7 +201,7 @@ const Styles = StyleSheet.create({
         padding: 10,
         backgroundColor: "#EDEAEA",
         flexDirection: "row",
-        borderRadius:30,
+        borderRadius: 30,
         borderWidth: 3,
         borderColor: "#FF8800",
     },
@@ -176,9 +210,10 @@ const Styles = StyleSheet.create({
         marginTop: 5
     },
     iconoOjo: {
-        marginRight: 5,
-        marginTop: 6,
-        marginLeft: 80
+        alignSelf: "flex-end",
+        marginLeft: "auto",
+        marginTop: 7,
+        marginLeft: 60
     },
     botonAgregarDisp: {
         marginLeft: 60,
@@ -187,7 +222,7 @@ const Styles = StyleSheet.create({
         marginBottom: 20
     },
     mensajeError: {
-      marginLeft: 40,
-      color: "red",
+        marginLeft: 40,
+        color: "red",
     },
 })

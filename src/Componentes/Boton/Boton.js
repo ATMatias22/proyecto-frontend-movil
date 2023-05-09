@@ -7,11 +7,11 @@ import {
 
 import { Text, TouchableOpacity, StyleSheet } from 'react-native';
 
-const Boton = ({ text, onClick, style = {}, type = 'principal' }) => {
+const Boton = ({ text, onPress, style = {}, type = 'principal' }) => {
     return (
 
         <TouchableOpacity
-            onPress={() => { onClick() }}
+            onPress={onPress}
         >
             <Text style={{
                 ...botonEstilos[type]
@@ -23,14 +23,14 @@ const Boton = ({ text, onClick, style = {}, type = 'principal' }) => {
 export default Boton;
 
 const Styles = StyleSheet.create({
-   /* boton: {
-        fontWeight: "bold",
-        fontSize: 16,
-        textTransform: "uppercase",
-        padding: 10,
-        textAlign: "center",
-        color: "white",
-        backgroundColor: "orangered",
-        borderRadius: 30
-    }*/
+    /* boton: {
+         fontWeight: "bold",
+         fontSize: 16,
+         textTransform: "uppercase",
+         padding: 10,
+         textAlign: "center",
+         color: "white",
+         backgroundColor: "orangered",
+         borderRadius: 30
+     }*/
 })

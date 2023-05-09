@@ -6,9 +6,12 @@ import { TouchableOpacity, View, Text } from "react-native";
 import { FontAwesomeIcon } from "@fortawesome/react-native-fontawesome";
 
 import { faGear } from "@fortawesome/free-solid-svg-icons/faGear";
+import { faUser } from "@fortawesome/free-solid-svg-icons/faUser";
 
 import Login from "./src/views/Login/Login";
 import Register from "./src/views/Register/Register";
+import PantallaCodigo from "./src/views/Register/PantallaCodigo";
+
 import MostrarSensores from "./src/views/MostrarSensores/MostrarSensores";
 import MostrarSensoresInvitado from "./src/views/MostrarSensores/MostrarSensoresInvitado";
 import InfoDispositivo from "./src/views/InfoDispositivo/InfoDispositivo";
@@ -29,7 +32,36 @@ const Stack = createNativeStackNavigator();
 
 const theme = { fontSizes: [14, 16, 20] };
 
+
 export default function App() {
+
+  /* function constructor(props) {
+     super(props);
+ 
+     this.state = {
+       loading: false,
+       token: "",
+       url: "http://localhost:8080/app_movil_sensor/api/auth/login"
+     }
+   }
+ 
+   function componentDidMount(){
+     this.getToken();
+   }
+ 
+   getToken = () => {
+     this.setState({ loading: true })
+ 
+     fetch(this.state.url)
+       .then(res => res.json())
+       .then(res => {
+         this.setState({
+           token: res.token,
+           loading: false
+         })
+       })
+   }*/
+
   return (
     <DripsyProvider theme={theme}>
       <NavigationContainer>
@@ -45,6 +77,11 @@ export default function App() {
             options={{ headerShown: false }}
           />
           <Stack.Screen
+            name="PantallaCodigo"
+            component={PantallaCodigo}
+            options={{ headerShown: false }}
+          />
+          <Stack.Screen
             name="MostrarSensores"
             component={MostrarSensores}
             options={({ navigation }) => ({
@@ -57,8 +94,9 @@ export default function App() {
                   <TouchableOpacity
                     onPress={() => navigation.navigate("Perfil")}
                   >
+
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -86,7 +124,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -113,7 +151,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -140,7 +178,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -157,7 +195,7 @@ export default function App() {
             name="CambiarContraseña"
             component={CambiarContraseña}
             options={({ navigation }) => ({
-              title: "Cambiar Contraseña",
+              title: "Cambiar Contraseña Dispositivo",
               headerStyle: { backgroundColor: "#FF8800" },
               headerTintColor: "#fff",
               headerTitleStyle: { fontWeight: "bold" },
@@ -167,7 +205,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -194,7 +232,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -221,7 +259,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -248,7 +286,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -275,7 +313,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -302,7 +340,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -329,7 +367,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -357,7 +395,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -384,7 +422,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -411,7 +449,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
@@ -428,7 +466,7 @@ export default function App() {
             name="CambiarContraseñaPerfil"
             component={CambiarContraseñaPerfil}
             options={({ navigation }) => ({
-              title: "Cambiar Tema",
+              title: "Cambiar Contraseña Perfil",
               headerStyle: { backgroundColor: "#FF8800" },
               headerTintColor: "#fff",
               headerTitleStyle: { fontWeight: "bold" },
@@ -438,7 +476,7 @@ export default function App() {
                     onPress={() => navigation.navigate("Perfil")}
                   >
                     <FontAwesomeIcon
-                      icon={faGear}
+                      icon={faUser}
                       style={{
                         marginLeft: 30,
                         marginTop: 5,
